@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
 import TaskList from "@/components/TaskList";
 import AIRecommendation from "@/components/AIRecommendation";
-import WelcomeAnimation from "@/components/WelcomeAnimation";
+import dynamic from "next/dynamic";
+const WelcomeAnimation = dynamic(() => import("@/components/WelcomeAnimation"), { ssr: false });
 import { storage } from "@/lib/storage";
 import { getDayName } from "@/lib/utils";
 import type { Task, PlannerData } from "@/types";
@@ -47,34 +48,49 @@ export default function HarianPage() {
   useEffect(() => { if (!mounted) return; storage.set("daily-tasks", tasks); }, [tasks, mounted]);
   useEffect(() => { if (!mounted) return; storage.set("daily-priority", priorityTasks); }, [priorityTasks, mounted]);
 
-  const handleNoteChange = (value: string) => {
+  const handleNoteChange = useCallback((value: string) => {
     setNote(value);
-    storage.set("daily-note", value);
-  };
+  }, []);
 
-  const today = new Date();
-  const dayName = getDayName(today);
-  const dateStr = today.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
-  const hour = today.getHours();
-  const greeting = hour < 10 ? "Pagi" : hour < 15 ? "Siang" : hour < 18 ? "Sore" : "Malam";
+  useEffect(() => {
+    if (!mounted) return;
+    const t = setTimeout(() => {
+      storage.set("daily-note", note);
+    }, 500);
+    return () => clearTimeout(t);
+  }, [note, mounted]);
 
-  const plannerData: PlannerData = {
-    tasks: {
-      pending: [...tasks, ...priorityTasks].filter(t => !t.done).map(t => t.text),
-      done: [...tasks, ...priorityTasks].filter(t => t.done).map(t => t.text),
-    },
-    habits: [],
-    goals: [],
-    context: {
-      day: `${dayName}, ${dateStr}`,
-      time: today.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }),
-      focusAreas: ["Produktivitas Harian"],
-    },
-  };
+  const todayStr = useMemo(() => {
+    const d = new Date();
+    return d.toISOString().split("T")[0]; // Just as a dependency boundary if needed, though today won't change
+  }, []);
 
-  const completedCount = [...tasks, ...priorityTasks].filter(t => t.done).length;
-  const totalCount = tasks.length + priorityTasks.length;
-  const progressPct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  const { dayName, dateStr, greeting, plannerData } = useMemo(() => {
+    const d = new Date();
+    const dName = getDayName(d);
+    const dStr = d.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+    const h = d.getHours();
+    const greet = h < 10 ? "Pagi" : h < 15 ? "Siang" : h < 18 ? "Sore" : "Malam";
+    
+    const pData: PlannerData = {
+      tasks: {
+        pending: [...tasks, ...priorityTasks].filter(t => !t.done).map(t => t.text),
+        done: [...tasks, ...priorityTasks].filter(t => t.done).map(t => t.text),
+      },
+      habits: [],
+      goals: [],
+      context: {
+        day: `${dName}, ${dStr}`,
+        time: d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }),
+        focusAreas: ["Produktivitas Harian"],
+      },
+    };
+    return { dayName: dName, dateStr: dStr, greeting: greet, plannerData: pData };
+  }, [tasks, priorityTasks, todayStr]);
+
+  const completedCount = useMemo(() => [...tasks, ...priorityTasks].filter(t => t.done).length, [tasks, priorityTasks]);
+  const totalCount = useMemo(() => tasks.length + priorityTasks.length, [tasks, priorityTasks]);
+  const progressPct = useMemo(() => totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0, [totalCount, completedCount]);
 
   return (
     <div className="page-wrapper">

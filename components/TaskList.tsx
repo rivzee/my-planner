@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, memo } from "react";
 import { generateId } from "@/lib/utils";
 import type { Task } from "@/types";
 import { addXP } from "@/lib/storage";
@@ -26,7 +26,7 @@ const priorityLabels: Record<string, string> = {
   low:    "Rendah",
 };
 
-export default function TaskList({
+function TaskList({
   tasks,
   onUpdate,
   title = "Tugas",
@@ -277,3 +277,5 @@ export default function TaskList({
     </div>
   );
 }
+
+export default memo(TaskList);

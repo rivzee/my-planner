@@ -60,8 +60,15 @@ export default function MingguanPage() {
 
   const handleFocusChange = useCallback((value: string) => {
     setWeeklyFocus(value);
-    storage.set("weekly-focus", value);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const t = setTimeout(() => {
+      storage.set("weekly-focus", weeklyFocus);
+    }, 500);
+    return () => clearTimeout(t);
+  }, [weeklyFocus, mounted]);
 
   const doneTasks = useMemo(() => tasks.filter(t => t.done).length, [tasks]);
   const pendingTasks = useMemo(() => tasks.filter(t => !t.done).length, [tasks]);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
 import GoalCard from "@/components/GoalCard";
 import { storage } from "@/lib/storage";
@@ -31,9 +31,9 @@ export default function TahunanPage() {
   const [form, setForm] = useState({ title: "", category: "karier" as "karier"|"kesehatan"|"belajar"|"keuangan", target: "", progress: 0 });
   const [activeCategory, setActiveCategory] = useState<string>("semua");
 
-  const currentYear = new Date().getFullYear();
-  const daysLeft = getDaysUntilYearEnd();
-  const yearProgress = getYearProgress();
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
+  const daysLeft = useMemo(() => getDaysUntilYearEnd(), []);
+  const yearProgress = useMemo(() => getYearProgress(), []);
 
   useEffect(() => {
     setMounted(true);
@@ -43,26 +43,26 @@ export default function TahunanPage() {
 
   useEffect(() => { if (!mounted) return; storage.set("yearly-goals", goals); }, [goals, mounted]);
 
-  const addGoal = () => {
+  const addGoal = useCallback(() => {
     if (!form.title.trim()) return;
     const newGoal: Goal = { id: generateId(), title: form.title.trim(), category: form.category, target: form.target, progress: form.progress, year: currentYear };
-    setGoals([...goals, newGoal]);
+    setGoals(prev => [...prev, newGoal]);
     setForm({ title: "", category: "karier", target: "", progress: 0 });
     setShowForm(false);
-  };
+  }, [form, currentYear]);
 
-  const updateGoal = (updated: Goal) => { setGoals(goals.map(g => g.id === updated.id ? updated : g)); };
-  const deleteGoal = (id: string) => { setGoals(goals.filter(g => g.id !== id)); };
+  const updateGoal = useCallback((updated: Goal) => { setGoals(prev => prev.map(g => g.id === updated.id ? updated : g)); }, []);
+  const deleteGoal = useCallback((id: string) => { setGoals(prev => prev.filter(g => g.id !== id)); }, []);
 
-  const filteredGoals = activeCategory === "semua" ? goals : goals.filter(g => g.category === activeCategory);
-  const avgProgress = goals.length > 0 ? Math.round(goals.reduce((sum, g) => sum + g.progress, 0) / goals.length) : 0;
+  const filteredGoals = useMemo(() => activeCategory === "semua" ? goals : goals.filter(g => g.category === activeCategory), [activeCategory, goals]);
+  const avgProgress = useMemo(() => goals.length > 0 ? Math.round(goals.reduce((sum, g) => sum + g.progress, 0) / goals.length) : 0, [goals]);
 
-  const statCards = [
+  const statCards = useMemo(() => [
     { value: daysLeft, label: "Hari Tersisa", bg: "rgba(52,211,153,0.1)", border: "rgba(52,211,153,0.2)", color: "var(--theme-accent)" },
     { value: `${yearProgress}%`, label: "Tahun Berjalan", bg: "rgba(251,191,36,0.1)", border: "rgba(251,191,36,0.2)", color: "var(--theme-amber)" },
     { value: goals.length, label: "Total Goals", bg: "rgba(96,165,250,0.1)", border: "rgba(96,165,250,0.2)", color: "var(--theme-blue)" },
     { value: `${avgProgress}%`, label: "Avg Progress", bg: "rgba(251,113,133,0.1)", border: "rgba(251,113,133,0.2)", color: "var(--theme-coral)" },
-  ];
+  ], [daysLeft, yearProgress, goals.length, avgProgress]);
 
   const card: React.CSSProperties = {
     background: "var(--theme-surface)",

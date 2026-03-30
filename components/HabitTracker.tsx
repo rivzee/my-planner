@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useMemo, memo } from "react";
 import { generateId, formatDate } from "@/lib/utils";
 import type { Habit } from "@/types";
 import { addXP } from "@/lib/storage";
@@ -21,19 +21,19 @@ function getLast7Days(): Date[] {
 const DAY_LABELS = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
 const ICON_OPTIONS = ["⭐", "💪", "📚", "🏃", "🧘", "💰", "🥗", "💧", "😴", "🎯"];
 
-export default function HabitTracker({ habits, onUpdate }: HabitTrackerProps) {
+function HabitTracker({ habits, onUpdate }: HabitTrackerProps) {
   const [input, setInput] = useState("");
   const [inputIcon, setInputIcon] = useState("⭐");
-  const last7Days = getLast7Days();
+  const last7Days = useMemo(() => getLast7Days(), []);
 
-  const addHabit = () => {
+  const addHabit = useCallback(() => {
     if (!input.trim()) return;
     const newHabit: Habit = { id: generateId(), name: input.trim(), icon: inputIcon, doneDates: [] };
     onUpdate([...habits, newHabit]);
     setInput("");
-  };
+  }, [input, inputIcon, habits, onUpdate]);
 
-  const toggleDay = (habitId: string, date: Date) => {
+  const toggleDay = useCallback((habitId: string, date: Date) => {
     const dateStr = formatDate(date);
     onUpdate(
       habits.map((h) => {
@@ -43,11 +43,11 @@ export default function HabitTracker({ habits, onUpdate }: HabitTrackerProps) {
         return { ...h, doneDates: done ? h.doneDates.filter((d) => d !== dateStr) : [...h.doneDates, dateStr] };
       })
     );
-  };
+  }, [habits, onUpdate]);
 
-  const deleteHabit = (id: string) => { onUpdate(habits.filter((h) => h.id !== id)); };
+  const deleteHabit = useCallback((id: string) => { onUpdate(habits.filter((h) => h.id !== id)); }, [habits, onUpdate]);
 
-  const getStreak = (habit: Habit): number => {
+  const getStreak = useCallback((habit: Habit): number => {
     let streak = 0;
     const today = new Date();
     for (let i = 0; i < 7; i++) {
@@ -57,9 +57,9 @@ export default function HabitTracker({ habits, onUpdate }: HabitTrackerProps) {
       else break;
     }
     return streak;
-  };
+  }, []);
 
-  const todayStr = formatDate(new Date());
+  const todayStr = useMemo(() => formatDate(new Date()), []);
 
   return (
     <div>
@@ -218,3 +218,5 @@ export default function HabitTracker({ habits, onUpdate }: HabitTrackerProps) {
     </div>
   );
 }
+
+export default memo(HabitTracker);

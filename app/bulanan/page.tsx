@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import Sidebar from "@/components/Sidebar";
 import MonthCalendar from "@/components/MonthCalendar";
 import { storage, addXP } from "@/lib/storage";
@@ -50,30 +50,30 @@ export default function BulananPage() {
     setReflection(saved?.reflection ?? "");
   }, [storageKey, mounted]);
 
-  const save = (newTargets: MonthlyTarget[], newReflection: string) => {
+  const save = useCallback((newTargets: MonthlyTarget[], newReflection: string) => {
     storage.set(storageKey, { targets: newTargets, reflection: newReflection });
-  };
+  }, [storageKey]);
 
-  const addTarget = () => {
+  const addTarget = useCallback(() => {
     if (!input.trim()) return;
     const newTargets = [...targets, { id: generateId(), text: input.trim(), done: false }];
     setTargets(newTargets); save(newTargets, reflection); setInput("");
-  };
+  }, [input, targets, reflection, save]);
 
-  const toggleTarget = (id: string) => {
+  const toggleTarget = useCallback((id: string) => {
     const target = targets.find(t => t.id === id);
     if (!target) return;
     addXP(target.done ? -20 : 20);
     const newTargets = targets.map(t => t.id === id ? { ...t, done: !t.done } : t);
     setTargets(newTargets); save(newTargets, reflection);
-  };
+  }, [targets, reflection, save]);
 
-  const deleteTarget = (id: string) => {
+  const deleteTarget = useCallback((id: string) => {
     const newTargets = targets.filter(t => t.id !== id);
     setTargets(newTargets); save(newTargets, reflection);
-  };
+  }, [targets, reflection, save]);
 
-  const editTargetNote = (id: string) => {
+  const editTargetNote = useCallback((id: string) => {
     const target = targets.find(t => t.id === id);
     if (!target) return;
     const newNote = window.prompt("Tambahkan catatan untuk plan ini:", target.note || "");
@@ -81,17 +81,25 @@ export default function BulananPage() {
       const newTargets = targets.map(t => t.id === id ? { ...t, note: newNote } : t);
       setTargets(newTargets); save(newTargets, reflection);
     }
-  };
+  }, [targets, reflection, save]);
 
-  const handleReflectionChange = (val: string) => {
-    setReflection(val); save(targets, val);
-  };
+  const handleReflectionChange = useCallback((val: string) => {
+    setReflection(val);
+  }, []);
 
-  const prevMonth = () => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); };
-  const nextMonth = () => { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); };
+  useEffect(() => {
+    if (!mounted) return;
+    const t = setTimeout(() => {
+      save(targets, reflection);
+    }, 500);
+    return () => clearTimeout(t);
+  }, [reflection, targets, mounted, save]);
 
-  const completedCount = targets.filter(t => t.done).length;
-  const progressPct = targets.length > 0 ? Math.round((completedCount / targets.length) * 100) : 0;
+  const prevMonth = useCallback(() => { if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1); }, [month]);
+  const nextMonth = useCallback(() => { if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1); }, [month]);
+
+  const completedCount = useMemo(() => targets.filter(t => t.done).length, [targets]);
+  const progressPct = useMemo(() => targets.length > 0 ? Math.round((completedCount / targets.length) * 100) : 0, [targets.length, completedCount]);
 
   return (
     <div className="page-wrapper">

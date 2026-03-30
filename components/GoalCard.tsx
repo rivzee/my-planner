@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { Goal } from "@/types";
 import { getCategoryColor, getCategoryIcon, getCategoryLabel } from "@/lib/utils";
 
@@ -9,7 +10,7 @@ interface GoalCardProps {
   onDelete: (id: string) => void;
 }
 
-export default function GoalCard({ goal, onUpdate, onDelete }: GoalCardProps) {
+function GoalCard({ goal, onUpdate, onDelete }: GoalCardProps) {
   const color = getCategoryColor(goal.category);
   const icon = getCategoryIcon(goal.category);
   const label = getCategoryLabel(goal.category);
@@ -111,3 +112,5 @@ export default function GoalCard({ goal, onUpdate, onDelete }: GoalCardProps) {
     </div>
   );
 }
+
+export default memo(GoalCard);

@@ -5,7 +5,8 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import Sidebar from "@/components/Sidebar";
-import WelcomeAnimation from "@/components/WelcomeAnimation";
+import dynamic from "next/dynamic";
+const WelcomeAnimation = dynamic(() => import("@/components/WelcomeAnimation"), { ssr: false });
 
 import { storage, getXP } from "@/lib/storage";
 import { getTodayString, formatDate } from "@/lib/utils";
