@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
 import HabitTrackerComponent from "@/components/HabitTracker";
 import { storage } from "@/lib/storage";
@@ -19,8 +19,8 @@ export default function HabitPage() {
 
   useEffect(() => { if (!mounted) return; storage.set("habits", habits); }, [habits, mounted]);
 
-  const today = formatDate(new Date());
-  const getStreak = (habit: Habit): number => {
+  const today = useMemo(() => formatDate(new Date()), []);
+  const getStreak = useCallback((habit: Habit): number => {
     let streak = 0;
     const now = new Date();
     for (let i = 0; i < 30; i++) {
@@ -30,18 +30,18 @@ export default function HabitPage() {
       else break;
     }
     return streak;
-  };
+  }, []);
 
-  const bestStreak = habits.length > 0 ? Math.max(...habits.map(getStreak)) : 0;
-  const todayCompleted = habits.filter(h => h.doneDates.includes(today)).length;
-  const todayPct = habits.length > 0 ? Math.round((todayCompleted / habits.length) * 100) : 0;
+  const bestStreak = useMemo(() => habits.length > 0 ? Math.max(...habits.map(getStreak)) : 0, [habits, getStreak]);
+  const todayCompleted = useMemo(() => habits.filter(h => h.doneDates.includes(today)).length, [habits, today]);
+  const todayPct = useMemo(() => habits.length > 0 ? Math.round((todayCompleted / habits.length) * 100) : 0, [habits.length, todayCompleted]);
 
-  const card: React.CSSProperties = {
+  const card: React.CSSProperties = useMemo(() => ({
     background: "var(--theme-surface)",
     border: "1px solid var(--theme-border)",
     borderRadius: 16,
     padding: 24,
-  };
+  }), []);
 
   return (
     <div className="page-wrapper">

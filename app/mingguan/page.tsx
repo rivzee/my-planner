@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
 import TaskList from "@/components/TaskList";
 import WeekGrid from "@/components/WeekGrid";
@@ -44,9 +44,9 @@ export default function MingguanPage() {
   const [weeklyFocus, setWeeklyFocus] = useState("");
   const [mounted, setMounted] = useState(false);
 
-  const weekDates = getWeekDates(weekOffset);
-  const weekStart = weekDates[0].toLocaleDateString("id-ID", { day: "numeric", month: "short" });
-  const weekEnd = weekDates[6].toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+  const weekDates = useMemo(() => getWeekDates(weekOffset), [weekOffset]);
+  const weekStart = useMemo(() => weekDates[0].toLocaleDateString("id-ID", { day: "numeric", month: "short" }), [weekDates]);
+  const weekEnd = useMemo(() => weekDates[6].toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }), [weekDates]);
 
   useEffect(() => {
     setMounted(true);
@@ -58,13 +58,13 @@ export default function MingguanPage() {
 
   useEffect(() => { if (!mounted) return; storage.set("weekly-tasks", tasks); }, [tasks, mounted]);
 
-  const handleFocusChange = (value: string) => {
+  const handleFocusChange = useCallback((value: string) => {
     setWeeklyFocus(value);
     storage.set("weekly-focus", value);
-  };
+  }, []);
 
-  const doneTasks = tasks.filter(t => t.done).length;
-  const pendingTasks = tasks.filter(t => !t.done).length;
+  const doneTasks = useMemo(() => tasks.filter(t => t.done).length, [tasks]);
+  const pendingTasks = useMemo(() => tasks.filter(t => !t.done).length, [tasks]);
 
   return (
     <div className="page-wrapper">

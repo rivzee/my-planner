@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { generateId } from "@/lib/utils";
 import type { Task } from "@/types";
 import { addXP } from "@/lib/storage";
@@ -37,7 +37,7 @@ export default function TaskList({
   const [input, setInput] = useState("");
   const [priority, setPriority] = useState<"high" | "medium" | "low">("medium");
 
-  const addTask = () => {
+  const addTask = useCallback(() => {
     if (!input.trim()) return;
     const newTask: Task = {
       id: generateId(),
@@ -48,22 +48,22 @@ export default function TaskList({
     };
     onUpdate([...tasks, newTask]);
     setInput("");
-  };
+  }, [input, priority, showPriority, tasks, onUpdate]);
 
-  const toggleTask = (id: string) => {
+  const toggleTask = useCallback((id: string) => {
     const taskIndex = tasks.findIndex(t => t.id === id);
     if (taskIndex === -1) return;
     const isDone = tasks[taskIndex].done;
     addXP(isDone ? -10 : 10);
     onUpdate(tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
-  };
+  }, [tasks, onUpdate]);
 
-  const deleteTask = (id: string) => {
+  const deleteTask = useCallback((id: string) => {
     onUpdate(tasks.filter((t) => t.id !== id));
-  };
+  }, [tasks, onUpdate]);
 
-  const pendingTasks = tasks.filter((t) => !t.done);
-  const doneTasks = tasks.filter((t) => t.done);
+  const pendingTasks = useMemo(() => tasks.filter((t) => !t.done), [tasks]);
+  const doneTasks = useMemo(() => tasks.filter((t) => t.done), [tasks]);
 
   return (
     <div>

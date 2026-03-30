@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import type { AIResult, PlannerData } from "@/types";
 
 interface AIRecommendationProps {
@@ -12,7 +12,7 @@ export default function AIRecommendation({ plannerData }: AIRecommendationProps)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const getRekomendasi = async () => {
+  const getRekomendasi = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -30,7 +30,7 @@ export default function AIRecommendation({ plannerData }: AIRecommendationProps)
     } finally {
       setLoading(false);
     }
-  };
+  }, [plannerData]);
 
   return (
     <div style={{
