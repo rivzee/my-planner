@@ -2,12 +2,19 @@
 
 import { SessionProvider, useSession } from "next-auth/react";
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { setStorageUser } from "../lib/storage";
 
 function AuthLoader({ children }: { children: ReactNode }) {
   const { data: session, status } = useSession();
+  const [isTimeout, setIsTimeout] = useState(false);
 
-  if (status === "loading") {
+  useEffect(() => {
+    const t = setTimeout(() => setIsTimeout(true), 3500); // Fail-safe fallback max 3.5s
+    return () => clearTimeout(t);
+  }, []);
+
+  if (status === "loading" && !isTimeout) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0C0C0E" }}>
         <div style={{ textAlign: "center", animation: "wa-fade-in 0.3s ease-out" }}>
