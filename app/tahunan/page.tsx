@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import GoalCard from "@/components/GoalCard";
 import { storage } from "@/lib/storage";
 import { generateId, getDaysUntilYearEnd, getYearProgress, getCategoryColor, getCategoryIcon, getCategoryLabel } from "@/lib/utils";
+import { Icons } from "@/components/Icons";
 import type { Goal } from "@/types";
 
 const CATEGORIES: Array<{ id: "karier" | "kesehatan" | "belajar" | "keuangan"; label: string }> = [
@@ -80,8 +81,9 @@ export default function TahunanPage() {
             Perencanaan Tahunan
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 12 }}>
-            <h1 style={{ margin: 0, fontFamily: '"DM Serif Display", serif', fontSize: "clamp(24px,3vw,34px)", fontWeight: 400, color: "var(--theme-ink)", letterSpacing: "-0.5px" }}>
-              Goals {currentYear} 🎯
+            <h1 style={{ margin: 0, fontFamily: '"DM Serif Display", serif', fontSize: "clamp(24px,3vw,34px)", fontWeight: 400, color: "var(--theme-ink)", letterSpacing: "-0.5px", display: "flex", alignItems: "center", gap: 10 }}>
+              <Icons.Target size={28} style={{ color: "var(--theme-ink-2)", opacity: 0.4 }} />
+              Goals {currentYear}
             </h1>
             <button
               onClick={() => setShowForm(!showForm)}
@@ -112,7 +114,10 @@ export default function TahunanPage() {
           });
           return (
             <div style={{ ...card, marginBottom: 20 }}>
-              <span style={{ fontSize: 14, fontWeight: 700, color: "var(--theme-ink)" }}>📊 Distribusi Fokus Tahun Ini</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: "var(--theme-ink)", display: "flex", alignItems: "center", gap: 7 }}>
+                <Icons.Layers size={14} style={{ color: "var(--theme-ink-2)", opacity: 0.5 }} />
+                Distribusi Fokus Tahun Ini
+              </span>
               <div style={{ display: "flex", height: 10, borderRadius: 99, overflow: "hidden", margin: "12px 0 10px", background: "var(--theme-surface-2)" }}>
                 {categoryStats.map(stat => stat.count > 0 && (
                   <div key={stat.id} title={`${stat.label}: ${stat.count} goals (${Math.round(stat.percentage)}%)`} style={{ width: `${stat.percentage}%`, background: getCategoryColor(stat.id) }} />
@@ -128,7 +133,7 @@ export default function TahunanPage() {
               </div>
               {categoryStats.some(s => s.percentage >= 60) && (
                 <div style={{ marginTop: 10, fontSize: 12, color: "var(--theme-amber)", background: "rgba(251,191,36,0.08)", padding: "8px 12px", borderRadius: 8, border: "1px dashed rgba(251,191,36,0.3)" }}>
-                  💡 <b>Saran:</b> Fokus terlalu dominan di satu kategori. Pertimbangkan menyeimbangkan aspek hidup lainnya.
+                  <b>Saran:</b> Fokus terlalu dominan di satu kategori. Pertimbangkan menyeimbangkan aspek hidup lainnya.
                 </div>
               )}
             </div>
@@ -138,7 +143,10 @@ export default function TahunanPage() {
         {/* ── Year Progress Bar ── */}
         <div style={{ ...card, marginBottom: 20 }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-            <span style={{ fontSize: 14, fontWeight: 600, color: "var(--theme-ink)" }}>Progress Waktu Berjalan {currentYear}</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: "var(--theme-ink)", display: "flex", alignItems: "center", gap: 7 }}>
+              <Icons.Activity size={14} style={{ color: "var(--theme-ink-2)", opacity: 0.5 }} />
+              Progress Waktu Berjalan {currentYear}
+            </span>
             <span style={{ fontSize: 13, color: "var(--theme-muted)" }}>Jan → Des</span>
           </div>
           <div style={{ height: 8, background: "var(--theme-surface-2)", borderRadius: 99, overflow: "hidden" }}>
@@ -184,11 +192,11 @@ export default function TahunanPage() {
         {/* ── Category Filter ── */}
         <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" as const }}>
           <button onClick={() => setActiveCategory("semua")} style={{ padding: "6px 16px", borderRadius: 20, border: `1px solid ${activeCategory === "semua" ? "var(--theme-accent)" : "var(--theme-border)"}`, background: activeCategory === "semua" ? "rgba(52,211,153,0.15)" : "var(--theme-surface-2)", color: activeCategory === "semua" ? "var(--theme-accent)" : "var(--theme-muted)", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "inherit", transition: "all 0.15s" }}>
-            🏆 Semua
+            Semua
           </button>
           {CATEGORIES.map(cat => (
-            <button key={cat.id} onClick={() => setActiveCategory(cat.id)} style={{ padding: "6px 16px", borderRadius: 20, border: `1px solid ${activeCategory === cat.id ? getCategoryColor(cat.id) : "var(--theme-border)"}`, background: activeCategory === cat.id ? `${getCategoryColor(cat.id)}20` : "var(--theme-surface-2)", color: activeCategory === cat.id ? getCategoryColor(cat.id) : "var(--theme-muted)", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "inherit", transition: "all 0.15s" }}>
-              {getCategoryIcon(cat.id)} {cat.label}
+            <button key={cat.id} onClick={() => setActiveCategory(cat.id)} style={{ padding: "6px 16px", borderRadius: 20, border: `1px solid ${activeCategory === cat.id ? getCategoryColor(cat.id) : "var(--theme-border)"}`, background: activeCategory === cat.id ? `${getCategoryColor(cat.id)}18` : "var(--theme-surface-2)", color: activeCategory === cat.id ? getCategoryColor(cat.id) : "var(--theme-muted)", cursor: "pointer", fontSize: 13, fontWeight: 600, fontFamily: "inherit", transition: "all 0.15s" }}>
+              {cat.label}
             </button>
           ))}
         </div>
@@ -196,7 +204,9 @@ export default function TahunanPage() {
         {/* ── Goals Grid ── */}
         {filteredGoals.length === 0 ? (
           <div style={{ textAlign: "center", padding: "56px 0", color: "var(--theme-muted)" }}>
-            <div style={{ fontSize: 48, marginBottom: 14 }}>🎯</div>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--theme-border-hover)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
             <p style={{ margin: 0, fontSize: 16 }}>
               {activeCategory === "semua" ? "Belum ada goals. Tambahkan goals pertamamu!" : `Belum ada goals untuk kategori ${getCategoryLabel(activeCategory)}`}
             </p>

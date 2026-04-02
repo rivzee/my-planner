@@ -19,19 +19,19 @@ function getLast7Days(): Date[] {
 }
 
 const DAY_LABELS = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
-const ICON_OPTIONS = ["⭐", "💪", "📚", "🏃", "🧘", "💰", "🥗", "💧", "😴", "🎯"];
+const CATEGORY_OPTIONS = ["Kesehatan", "Belajar", "Olahraga", "Nutrisi", "Mindfulness", "Keuangan", "Tidur", "Produktivitas"];
 
 function HabitTracker({ habits, onUpdate }: HabitTrackerProps) {
   const [input, setInput] = useState("");
-  const [inputIcon, setInputIcon] = useState("⭐");
+  const [inputCategory, setInputCategory] = useState("Produktivitas");
   const last7Days = useMemo(() => getLast7Days(), []);
 
   const addHabit = useCallback(() => {
     if (!input.trim()) return;
-    const newHabit: Habit = { id: generateId(), name: input.trim(), icon: inputIcon, doneDates: [] };
+    const newHabit: Habit = { id: generateId(), name: input.trim(), icon: inputCategory, doneDates: [] };
     onUpdate([...habits, newHabit]);
     setInput("");
-  }, [input, inputIcon, habits, onUpdate]);
+  }, [input, inputCategory, habits, onUpdate]);
 
   const toggleDay = useCallback((habitId: string, date: Date) => {
     const dateStr = formatDate(date);
@@ -66,19 +66,19 @@ function HabitTracker({ habits, onUpdate }: HabitTrackerProps) {
       {/* ── Add Habit ── */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
         <select
-          value={inputIcon}
-          onChange={(e) => setInputIcon(e.target.value)}
+          value={inputCategory}
+          onChange={(e) => setInputCategory(e.target.value)}
           style={{
             background: "var(--theme-surface-2)",
             border: "1px solid var(--theme-border)",
             borderRadius: 8, padding: "8px 10px",
-            fontSize: 16, cursor: "pointer", outline: "none", fontFamily: "inherit",
-            color: "var(--theme-ink)", transition: "border-color 0.15s",
+            fontSize: 12, cursor: "pointer", outline: "none", fontFamily: "inherit",
+            color: "var(--theme-ink-2)", transition: "border-color 0.15s",
           }}
           onFocus={e => e.target.style.borderColor = "var(--theme-accent)"}
           onBlur={e => e.target.style.borderColor = "var(--theme-border)"}
         >
-          {ICON_OPTIONS.map((icon) => <option key={icon} value={icon}>{icon}</option>)}
+          {CATEGORY_OPTIONS.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
         </select>
         <input
           value={input}
@@ -151,19 +151,23 @@ function HabitTracker({ habits, onUpdate }: HabitTrackerProps) {
               onMouseLeave={e => e.currentTarget.style.borderColor = "var(--theme-border)"}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-                <span style={{ fontSize: 18 }}>{habit.icon}</span>
+                <span style={{
+                  fontSize: 10, fontWeight: 700, color: "var(--theme-muted)",
+                  background: "var(--theme-surface)", border: "1px solid var(--theme-border)",
+                  padding: "2px 7px", borderRadius: 6, whiteSpace: "nowrap" as const, flexShrink: 0,
+                }}>{habit.icon}</span>
                 <span style={{ fontSize: 13, color: "var(--theme-ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
                   {habit.name}
                 </span>
                 {streak > 0 && (
                   <span style={{
                     fontSize: 10,
-                    background: streak >= 7 ? "rgba(255,215,0,0.12)" : "rgba(52,211,153,0.1)",
-                    border: streak >= 7 ? "1px solid rgba(255,215,0,0.4)" : "none",
+                    background: streak >= 7 ? "rgba(255,200,0,0.1)" : "rgba(52,211,153,0.08)",
+                    border: `1px solid ${streak >= 7 ? "rgba(255,200,0,0.3)" : "rgba(52,211,153,0.2)"}`,
                     color: streak >= 7 ? "#FBBF24" : "var(--theme-accent)",
-                    padding: "2px 6px", borderRadius: 10, fontWeight: 700, whiteSpace: "nowrap" as const,
+                    padding: "2px 7px", borderRadius: 10, fontWeight: 700, whiteSpace: "nowrap" as const,
                   }}>
-                    🔥{streak}{streak >= 7 && " STREAK!"}
+                    {streak} hari{streak >= 7 && " 🔥"}
                   </span>
                 )}
               </div>
@@ -212,7 +216,8 @@ function HabitTracker({ habits, onUpdate }: HabitTrackerProps) {
 
       {habits.length === 0 && (
         <div style={{ textAlign: "center", padding: "32px 0", color: "var(--theme-muted)", fontSize: 13 }}>
-          Belum ada habit. Mulai lacak kebiasaanmu! 🌱
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ margin: "0 auto 10px", display: "block" }}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Belum ada habit. Mulai lacak kebiasaanmu!
         </div>
       )}
     </div>

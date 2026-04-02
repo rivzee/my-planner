@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import Sidebar from "@/components/Sidebar";
-import dynamic from "next/dynamic";
-const WelcomeAnimation = dynamic(() => import("@/components/WelcomeAnimation"), { ssr: false });
+import DailyBriefing from "@/components/DailyBriefing";
+
 
 import { storage, getXP } from "@/lib/storage";
 import { getTodayString, formatDate } from "@/lib/utils";
@@ -21,12 +21,11 @@ interface StatCardProps {
   label: string;
   value: string | number;
   sub?: string;
-  accent: string;
   href: string;
   isEmpty?: boolean;
 }
 
-function StatCard({ icon, label, value, sub, accent, href, isEmpty }: StatCardProps) {
+function StatCard({ icon, label, value, sub, href, isEmpty }: StatCardProps) {
   const [hovered, setHovered] = useState(false);
   return (
     <Link href={href} style={{ textDecoration: "none" }}>
@@ -34,30 +33,27 @@ function StatCard({ icon, label, value, sub, accent, href, isEmpty }: StatCardPr
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{
-          background: hovered ? accent : "var(--theme-surface)",
-          border: `1px solid ${hovered ? accent : "var(--theme-border)"}`,
+          background: "var(--theme-surface)",
+          border: `1px solid ${hovered ? "var(--theme-accent)" : "var(--theme-border)"}`,
           borderRadius: 16,
           padding: "20px",
           cursor: "pointer",
           transition: "all 0.22s cubic-bezier(0.16, 1, 0.3, 1)",
           transform: hovered ? "translateY(-3px)" : "none",
-          boxShadow: hovered ? `0 12px 32px ${accent}30` : "var(--theme-card-shadow)",
-          position: "relative" as const,
+          boxShadow: hovered ? "0 12px 24px rgba(0,0,0,0.08)" : "var(--theme-card-shadow)",
+          position: "relative",
           overflow: "hidden",
         }}
       >
-        {/* Background blur effect on hover */}
-        {hovered && (
-          <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${accent}08, ${accent}18)`, borderRadius: 16 }} />
-        )}
-        <div style={{ position: "relative" as const }}>
+        <div style={{ position: "relative" }}>
           <div style={{
             width: 40, height: 40,
-            background: hovered ? "rgba(255,255,255,0.15)" : `${accent}14`,
+            background: "transparent",
+            border: "1px solid var(--theme-border)",
             borderRadius: 11,
             display: "flex", alignItems: "center", justifyContent: "center",
             marginBottom: 14,
-            color: hovered ? "white" : accent,
+            color: hovered ? "var(--theme-accent)" : "var(--theme-ink-2)",
             transition: "all 0.22s",
           }}>
             {icon}
@@ -66,17 +62,17 @@ function StatCard({ icon, label, value, sub, accent, href, isEmpty }: StatCardPr
             fontSize: 26,
             fontFamily: '"DM Serif Display", serif',
             fontWeight: 400,
-            color: hovered ? "white" : "var(--theme-ink)",
+            color: "var(--theme-ink)",
             lineHeight: 1,
             marginBottom: 5,
           }}>
             {isEmpty ? <span style={{ fontSize: 20, opacity: 0.4 }}>—</span> : value}
           </div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: hovered ? "rgba(255,255,255,0.9)" : "var(--theme-ink-2)" }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--theme-ink-2)" }}>
             {label}
           </div>
           {sub && (
-            <div style={{ fontSize: 11, color: hovered ? "rgba(255,255,255,0.65)" : "var(--theme-muted)", marginTop: 3 }}>
+            <div style={{ fontSize: 11, color: "var(--theme-muted)", marginTop: 3 }}>
               {sub}
             </div>
           )}
@@ -87,7 +83,7 @@ function StatCard({ icon, label, value, sub, accent, href, isEmpty }: StatCardPr
 }
 
 // ── Quick Link ─────────────────────────────────────────────────────────────
-function QuickLink({ href, icon, label, desc, accent, hoverBg }: { href: string; icon: React.ReactNode; label: string; desc: string; accent: string; hoverBg?: string }) {
+function QuickLink({ href, icon, label, desc }: { href: string; icon: React.ReactNode; label: string; desc: string }) {
   const [hovered, setHovered] = useState(false);
   return (
     <Link href={href} style={{ textDecoration: "none" }}>
@@ -99,31 +95,31 @@ function QuickLink({ href, icon, label, desc, accent, hoverBg }: { href: string;
           alignItems: "center",
           gap: 13,
           padding: "13px 16px",
-          background: hovered ? (hoverBg ?? `${accent}08`) : "var(--theme-surface)",
-          border: `1px solid ${hovered ? accent + "50" : "var(--theme-border)"}`,
+          background: hovered ? "var(--theme-surface-2)" : "var(--theme-surface)",
+          border: `1px solid ${hovered ? "var(--theme-border-hover)" : "var(--theme-border)"}`,
           borderRadius: 13,
           cursor: "pointer",
           transition: "all 0.18s ease",
           transform: hovered ? "translateX(3px)" : "none",
-          boxShadow: hovered ? "var(--theme-card-shadow-hover)" : "var(--theme-card-shadow)",
         }}
       >
         <div style={{
           width: 38, height: 38,
-          background: hovered ? accent : `${accent}12`,
+          background: "transparent",
+          border: "1px solid var(--theme-border)",
           borderRadius: 10,
           display: "flex", alignItems: "center", justifyContent: "center",
           flexShrink: 0,
-          color: hovered ? "white" : accent,
+          color: hovered ? "var(--theme-accent)" : "var(--theme-ink-2)",
           transition: "all 0.18s",
         }}>
           {icon}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13.5, fontWeight: 600, color: hovered ? accent : "var(--theme-ink)" }}>{label}</div>
+          <div style={{ fontSize: 13.5, fontWeight: 600, color: "var(--theme-ink)" }}>{label}</div>
           <div style={{ fontSize: 11.5, color: "var(--theme-muted)", marginTop: 2 }}>{desc}</div>
         </div>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={hovered ? accent : "var(--theme-border)"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "all 0.18s", flexShrink: 0 }}><polyline points="9 18 15 12 9 6"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={hovered ? "var(--theme-accent)" : "var(--theme-border)"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transition: "all 0.18s", flexShrink: 0 }}><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </Link>
   );
@@ -172,34 +168,49 @@ export default function DashboardPage() {
   const [habitTotal, setHabitTotal] = useState(0);
   const [xp, setXp] = useState(0);
 
+  // Data for AI Briefing
+  const [pendingTasks, setPendingTasks] = useState<string[]>([]);
+  const [doneTasks, setDoneTasks] = useState<string[]>([]);
+  const [habitsForAI, setHabitsForAI] = useState<Array<{ name: string; streak: number }>>([]);
+  const [monthlyTargetsForAI, setMonthlyTargetsForAI] = useState<Array<{ text: string; done: boolean }>>([]);
+
   useEffect(() => {
     setMounted(true);
 
-    const dailyTasks = storage.get<Task[]>("daily-tasks") ?? [];
-    const dailyPriority = storage.get<Task[]>("daily-priority") ?? [];
+    const ensureArr = (val: any) => Array.isArray(val) ? val : [];
+
+    const dailyTasks = ensureArr(storage.get<Task[]>("daily-tasks"));
+    const dailyPriority = ensureArr(storage.get<Task[]>("daily-priority"));
     const allDaily = [...dailyTasks, ...dailyPriority];
     setDailyDone(allDaily.filter(t => t.done).length);
     setDailyTotal(allDaily.length);
 
-    setWeeklyFocus(storage.get<string>("weekly-focus") ?? "");
+    // For AI Briefing
+    setPendingTasks(allDaily.filter(t => !t.done).map(t => t.text));
+    setDoneTasks(allDaily.filter(t => t.done).map(t => t.text));
+
+    const wf = storage.get<string>("weekly-focus") ?? "";
+    setWeeklyFocus(wf);
 
     const now = new Date();
     const monthKey = `monthly-${now.getFullYear()}-${now.getMonth()}`;
-    const monthTargets = storage.get<MonthlyTarget[]>(monthKey) ?? [];
+    const monthTargets = ensureArr(storage.get<MonthlyTarget[]>(monthKey));
     setMonthlyDone(monthTargets.filter(t => t.done).length);
     setMonthlyTotal(monthTargets.length);
+    setMonthlyTargetsForAI(monthTargets.map(t => ({ text: t.text, done: t.done })));
 
     const yearKey = `yearly-goals-${now.getFullYear()}`;
-    const yearGoals = storage.get<any[]>(yearKey) ?? [];
+    const yearGoals = ensureArr(storage.get<any[]>(yearKey));
     setYearlyDone(yearGoals.filter((g: any) => g.done).length);
     setYearlyTotal(yearGoals.length);
 
-    const habits = storage.get<Habit[]>("habits") ?? [];
+    const habits = ensureArr(storage.get<Habit[]>("habits"));
     const today = getTodayString();
     setHabitTotal(habits.length);
     setHabitToday(habits.filter(h => h.doneDates?.includes(today)).length);
 
     let best = 0;
+    const habitAIData: Array<{ name: string; streak: number }> = [];
     habits.forEach(habit => {
       let streak = 0;
       const d = new Date();
@@ -208,8 +219,10 @@ export default function DashboardPage() {
         else break;
       }
       if (streak > best) best = streak;
+      habitAIData.push({ name: habit.name, streak });
     });
     setHabitStreak(best);
+    setHabitsForAI(habitAIData);
 
     setXp(getXP());
   }, []);
@@ -219,7 +232,6 @@ export default function DashboardPage() {
   const greeting = hour < 10 ? "Selamat Pagi" : hour < 15 ? "Selamat Siang" : hour < 18 ? "Selamat Sore" : "Selamat Malam";
   const firstName = session?.user?.name?.split(" ")[0] ?? "Pengguna";
   const dateStr = today.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-  const greetEmoji = hour < 10 ? "🌅" : hour < 15 ? "☀️" : hour < 18 ? "🌤️" : "🌙";
 
   const currentLevel = Math.floor(xp / LEVEL_UP_XP) + 1;
   const xpInLevel = xp % LEVEL_UP_XP;
@@ -234,7 +246,7 @@ export default function DashboardPage() {
 
   return (
     <div className="page-wrapper">
-      <WelcomeAnimation name={session?.user?.name} />
+
       <Sidebar />
       <main className="page-main">
 
@@ -243,7 +255,7 @@ export default function DashboardPage() {
           <div className="animate-fade-up">
             <div style={{ fontSize: 12, color: "var(--theme-muted)", marginBottom: 4, fontWeight: 500 }}>{dateStr}</div>
             <h1 style={{ margin: 0, fontFamily: '"DM Serif Display", serif', fontSize: "clamp(26px, 3.5vw, 36px)", fontWeight: 400, color: "var(--theme-ink)", lineHeight: 1.2 }}>
-              {greeting}, {firstName}! {greetEmoji}
+              {greeting}, {firstName}.
             </h1>
             <p style={{ margin: "6px 0 0", fontSize: 14, color: "var(--theme-muted)" }}>
               Ikhtisar semua rencana & progres hari ini.
@@ -282,9 +294,9 @@ export default function DashboardPage() {
           <div style={{ position: "absolute", right: -30, top: -30, width: 120, height: 120, background: "rgba(255,255,255,0.05)", borderRadius: "50%" }} />
           <div style={{ position: "absolute", right: 60, bottom: -50, width: 100, height: 100, background: "rgba(255,255,255,0.04)", borderRadius: "50%" }} />
 
-          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 14, padding: "10px 12px", backdropFilter: "blur(4px)", flexShrink: 0 }}>
-            <StarIcon />
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.8)", fontWeight: 600, marginTop: 2, textAlign: "center" as const }}>LV.{currentLevel}</div>
+          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 14, padding: "10px 12px", backdropFilter: "blur(4px)", flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" color="white"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.8)", fontWeight: 600, marginTop: 4, textAlign: "center" as const }}>LV.{currentLevel}</div>
           </div>
           <div style={{ flex: 1, minWidth: 160 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
@@ -301,34 +313,45 @@ export default function DashboardPage() {
           </div>
         </div>
 
+        {/* ── AI Daily Briefing ── */}
+        <DailyBriefing
+          userName={session?.user?.name || undefined}
+          tasks={{ pending: pendingTasks, done: doneTasks }}
+          habits={habitsForAI}
+          monthlyTargets={monthlyTargetsForAI}
+          weeklyFocus={weeklyFocus}
+          xp={xp}
+          level={currentLevel}
+        />
+
         {/* ── Stats Grid ── */}
         <div className="stats-grid-4 animate-fade-up delay-200">
           <StatCard
             icon={<SunIcon />} label="Tugas Harian"
             value={`${dailyDone}/${dailyTotal}`}
             sub={dailyTotal > 0 ? `${dailyPct}% selesai` : "Belum ada tugas"}
-            accent="var(--theme-accent)" href="/harian"
+            href="/harian"
             isEmpty={dailyTotal === 0}
           />
           <StatCard
             icon={<CalIcon />} label="Target Bulanan"
             value={`${monthlyDone}/${monthlyTotal}`}
             sub={monthlyTotal > 0 ? `${monthlyPct}% tercapai` : MONTH_NAMES[today.getMonth()]}
-            accent="var(--theme-amber)" href="/bulanan"
+            href="/bulanan"
             isEmpty={monthlyTotal === 0}
           />
           <StatCard
             icon={<TargetIcon />} label="Goals Tahunan"
             value={`${yearlyDone}/${yearlyTotal}`}
             sub={yearlyTotal > 0 ? `${yearlyPct}% tercapai` : `Tahun ${today.getFullYear()}`}
-            accent="var(--theme-blue)" href="/tahunan"
+            href="/tahunan"
             isEmpty={yearlyTotal === 0}
           />
           <StatCard
             icon={<FireIcon />} label="Habit Streak"
             value={`${habitStreak}`}
             sub={habitStreak > 0 ? "hari berturut-turut" : "Mulai kebiasaanmu"}
-            accent="var(--theme-coral)" href="/habit"
+            href="/habit"
             isEmpty={habitStreak === 0}
           />
         </div>
@@ -356,8 +379,8 @@ export default function DashboardPage() {
             {/* Weekly focus */}
             {weeklyFocus && (
               <div className="card" style={{ padding: 22, background: "linear-gradient(135deg, var(--theme-surface), var(--theme-surface-2))", borderColor: "rgba(22,163,74,0.15)" }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "var(--theme-accent)", letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: 10 }}>
-                  🎯 Fokus Minggu Ini
+                <div style={{ fontSize: 10, fontWeight: 700, color: "var(--theme-ink-2)", letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: 10 }}>
+                  Fokus Minggu Ini
                 </div>
                 <p style={{ margin: 0, fontSize: 14.5, color: "var(--theme-ink)", lineHeight: 1.65, fontStyle: "italic" }}>
                   &ldquo;{weeklyFocus}&rdquo;
@@ -371,11 +394,11 @@ export default function DashboardPage() {
 
             {/* Empty state */}
             {dailyTotal === 0 && monthlyTotal === 0 && yearlyTotal === 0 && (
-              <div className="card" style={{ padding: 28, textAlign: "center" as const, borderStyle: "dashed", background: "transparent" }}>
-                <div style={{ fontSize: 40, marginBottom: 14 }}>🚀</div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: "var(--theme-ink)", marginBottom: 6 }}>Mulai Rencanamu!</div>
+              <div className="card" style={{ padding: 32, textAlign: "center" as const, background: "var(--theme-surface)", border: "1px solid var(--theme-border)", boxShadow: "none" }}>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--theme-border-hover)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 16 }}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <div style={{ fontSize: 15, fontWeight: 600, color: "var(--theme-ink)", marginBottom: 6 }}>Belum ada rencana</div>
                 <div style={{ fontSize: 13, color: "var(--theme-muted)", lineHeight: 1.6 }}>
-                  Belum ada tugas atau target. Yuk tambahkan rencana pertamamu!
+                  Mulai tambahkan tugas atau target pertamamu.
                 </div>
               </div>
             )}
@@ -384,15 +407,15 @@ export default function DashboardPage() {
           {/* Right: Quick Links */}
           <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
             <h2 style={{ margin: "0 0 4px", fontSize: 15, fontWeight: 700, color: "var(--theme-ink)", fontFamily: "inherit", display: "flex", alignItems: "center", gap: 7 }}>
-              <span style={{ color: "var(--theme-amber)" }}>⚡</span> Akses Cepat
+              Akses Cepat
             </h2>
-            <QuickLink href="/harian" icon={<SunIcon />} label="Harian" desc="Tambah & selesaikan tugas hari ini" accent="var(--theme-accent)" />
-            <QuickLink href="/mingguan" icon={<CalIcon />} label="Mingguan" desc="Atur fokus & rencana minggu ini" accent="#0EA5E9" />
+            <QuickLink href="/harian" icon={<SunIcon />} label="Harian" desc="Tambah & selesaikan tugas hari ini" />
+            <QuickLink href="/mingguan" icon={<CalIcon />} label="Mingguan" desc="Atur fokus & rencana minggu ini" />
             <QuickLink href="/bulanan" icon={
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            } label="Bulanan" desc="Pantau target & evaluasi bulan" accent="var(--theme-amber)" />
-            <QuickLink href="/tahunan" icon={<TargetIcon />} label="Tahunan" desc="Goals besar & distribusi fokus hidup" accent="var(--theme-blue)" />
-            <QuickLink href="/habit" icon={<CheckIcon />} label="Habit Tracker" desc="Jaga kebiasaan & raih streak baru" accent="var(--theme-coral)" />
+            } label="Bulanan" desc="Pantau target & evaluasi bulan" />
+            <QuickLink href="/tahunan" icon={<TargetIcon />} label="Tahunan" desc="Goals besar & distribusi fokus hidup" />
+            <QuickLink href="/habit" icon={<CheckIcon />} label="Habit Tracker" desc="Jaga kebiasaan & raih streak baru" />
 
             {/* Motivational card */}
             <div style={{
@@ -404,7 +427,7 @@ export default function DashboardPage() {
               border: "1px solid #3F3F46",
             }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#71717A", marginBottom: 10 }}>
-                ✨ Ingat Selalu
+                Pengingat
               </div>
               <p style={{ margin: 0, fontSize: 14, lineHeight: 1.65, fontStyle: "italic", color: "#E4E4E7" }}>
                 &ldquo;Disiplin adalah jembatan antara impian dan kenyataan.&rdquo;

@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import Sidebar from "@/components/Sidebar";
 import TaskList from "@/components/TaskList";
 import WeekGrid from "@/components/WeekGrid";
+import { Icons } from "@/components/Icons";
 import { storage } from "@/lib/storage";
 import { getWeekDates, formatDate, getDayName } from "@/lib/utils";
 import type { Task } from "@/types";
@@ -84,8 +85,9 @@ export default function MingguanPage() {
             Perencanaan Mingguan
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 12 }}>
-            <h1 style={{ margin: 0, fontFamily: '"DM Serif Display", serif', fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 400, color: "var(--theme-ink)", letterSpacing: "-0.5px" }}>
-              Rencana Minggu Ini 📅
+            <h1 style={{ margin: 0, fontFamily: '"DM Serif Display", serif', fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 400, color: "var(--theme-ink)", letterSpacing: "-0.5px", display: "flex", alignItems: "center", gap: 10 }}>
+              <Icons.Calendar size={28} style={{ color: "var(--theme-ink-2)", opacity: 0.4 }} />
+              Rencana Minggu Ini
             </h1>
             {/* Week nav */}
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -115,7 +117,10 @@ export default function MingguanPage() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 20, alignItems: "start" }}>
           {/* Left */}
           <div style={card}>
-            <h2 style={cardTitle}><span style={{ fontSize: 18 }}>📋</span> Daftar Tugas Mingguan</h2>
+            <h2 style={cardTitle}>
+              <Icons.List size={15} style={{ color: "var(--theme-ink-2)", opacity: 0.5 }} />
+              Daftar Tugas Mingguan
+            </h2>
             <p style={{ margin: "0 0 20px", fontSize: 13, color: "var(--theme-muted)", lineHeight: 1.6 }}>
               Tugas fleksibel minggu ini — dikerjakan kapan saja sebelum akhir minggu.
             </p>
@@ -126,7 +131,10 @@ export default function MingguanPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             {/* Focus */}
             <div style={card}>
-              <h3 style={cardTitle}><span style={{ fontSize: 18 }}>🎯</span> Fokus Minggu Ini</h3>
+              <h3 style={cardTitle}>
+                <Icons.Target size={15} style={{ color: "var(--theme-ink-2)", opacity: 0.5 }} />
+                Fokus Minggu Ini
+              </h3>
               <textarea
                 value={weeklyFocus}
                 onChange={(e) => handleFocusChange(e.target.value)}
@@ -147,7 +155,10 @@ export default function MingguanPage() {
 
             {/* Stats */}
             <div style={{ background: "rgba(96,165,250,0.06)", border: "1px solid rgba(96,165,250,0.15)", borderRadius: 16, padding: 20 }}>
-              <h3 style={{ ...cardTitle, marginBottom: 14 }}><span>📊</span> Statistik</h3>
+              <h3 style={{ ...cardTitle, marginBottom: 14 }}>
+                <Icons.BarChart size={15} style={{ color: "var(--theme-ink-2)", opacity: 0.5 }} />
+                Statistik
+              </h3>
               {[
                 { label: "Total Tugas", value: tasks.length, color: "var(--theme-blue)" },
                 { label: "Selesai", value: doneTasks, color: "var(--theme-accent)" },

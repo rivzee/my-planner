@@ -3,6 +3,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Icons } from "@/components/Icons";
 
 const GoogleIcon = ({ size = 18 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24">
@@ -14,12 +15,12 @@ const GoogleIcon = ({ size = 18 }: { size?: number }) => (
 );
 
 const features = [
-  { icon: "☀️", title: "Harian", desc: "Kelola tugas & prioritas setiap hari dengan cerdas", color: "#FBBF24" },
-  { icon: "📅", title: "Mingguan", desc: "Rencanakan satu minggu penuh, fleksibel & terstruktur", color: "#60A5FA" },
-  { icon: "🗓️", title: "Bulanan", desc: "Target bulanan dengan catatan & evaluasi pencapaian", color: "#34D399" },
-  { icon: "🎯", title: "Tahunan", desc: "Goals tahunan dengan tracking distribusi fokus hidup", color: "#C084FC" },
-  { icon: "🔁", title: "Habit Tracker", desc: "Lacak kebiasaan harian & bangun streak 7 hari 🔥", color: "#FB7185" },
-  { icon: "🤖", title: "AI Advisor", desc: "Rekomendasi prioritas dari Gemini AI yang personal", color: "#2DD4BF" },
+  { icon: "sun",     title: "Harian",       desc: "Kelola tugas & prioritas setiap hari dengan cerdas",              color: "#A89A7A" },
+  { icon: "cal",     title: "Mingguan",      desc: "Rencanakan satu minggu penuh, fleksibel & terstruktur",          color: "#7A8FA8" },
+  { icon: "cal",     title: "Bulanan",       desc: "Target bulanan dengan catatan & evaluasi pencapaian",             color: "#7AA89A" },
+  { icon: "target",  title: "Tahunan",       desc: "Goals tahunan dengan tracking distribusi fokus hidup",            color: "#8A7AA8" },
+  { icon: "repeat",  title: "Habit Tracker", desc: "Lacak kebiasaan harian & bangun konsistensi streak 7 hari",      color: "#A87A8A" },
+  { icon: "cpu",     title: "AI Advisor",    desc: "Rekomendasi prioritas dari Gemini AI yang personal",             color: "#7AA880" },
 ];
 
 
@@ -29,22 +30,38 @@ export default function Home() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [activePreview, setActivePreview] = useState("Harian");
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
+
+  // Fail-safe: if loading takes more than 2s, show landing page anyway
+  useEffect(() => {
+    if (status === "loading") {
+      const t = setTimeout(() => setLoadingTimeout(true), 2000);
+      return () => clearTimeout(t);
+    }
+  }, [status]);
 
   useEffect(() => {
     if (status === "authenticated") router.push("/dashboard");
   }, [status, router]);
 
-  if (!mounted || status === "loading" || status === "authenticated") {
+  // Only block rendering for authenticated (redirect in progress) or very brief initial mount
+  // For "loading", use timeout fallback so page doesn't get stuck forever
+  const isLoading = !mounted || (status === "loading" && !loadingTimeout) || status === "authenticated";
+
+  if (isLoading) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0C0C0E" }}>
         <div style={{ textAlign: "center" }}>
           <div style={{
-            width: 56, height: 56, background: "linear-gradient(135deg, #059669, #0D9488)",
-            borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 26, margin: "0 auto 16px", boxShadow: "0 0 24px rgba(52,211,153,0.3)",
-          }}>📋</div>
+            width: 56, height: 56,
+            borderRadius: 16, margin: "0 auto 16px",
+            boxShadow: "0 0 24px rgba(52,211,153,0.3)",
+            overflow: "hidden",
+          }}>
+            <img src="/logos.png" alt="Rivanzee" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
           <div style={{ fontFamily: '"DM Serif Display", serif', fontSize: 22, color: "#F2F2F4" }}>Rivanzee</div>
           <div style={{ fontSize: 12, color: "#5C5C6B", marginTop: 8, letterSpacing: "0.1em" }}>MEMUAT...</div>
         </div>
@@ -79,10 +96,12 @@ export default function Home() {
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginBottom: 32 }}>
           <div style={{
             width: 42, height: 42,
-            background: "linear-gradient(135deg, #059669, #0D9488)",
-            borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 20, boxShadow: "0 4px 20px rgba(52,211,153,0.3)",
-          }}>📋</div>
+            borderRadius: 14,
+            boxShadow: "0 4px 20px rgba(52,211,153,0.3)",
+            overflow: "hidden", flexShrink: 0,
+          }}>
+            <img src="/logos.png" alt="Rivanzee" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
           <span style={{ fontFamily: '"DM Serif Display", serif', fontSize: 32, color: "#F2F2F4", letterSpacing: "-0.5px" }}>Personal Planner</span>
         </div>
 
@@ -228,40 +247,46 @@ export default function Home() {
               {/* Sidebar preview */}
               <div style={{ width: 170, background: "#0C0C0E", borderRadius: 12, padding: "14px 10px", flexShrink: 0, border: "1px solid rgba(255,255,255,0.05)", display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 14, padding: "0 4px" }}>
-                  <div style={{ width: 26, height: 26, background: "linear-gradient(135deg,#059669,#0D9488)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12 }}>📋</div>
+                  <div style={{ width: 26, height: 26, borderRadius: 7, overflow: "hidden", flexShrink: 0 }}>
+                    <img src="/logos.png" alt="Rivanzee" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  </div>
                   <span style={{ fontFamily: '"DM Serif Display", serif', fontSize: 14, color: "#F2F2F4" }}>Personal Planner</span>
                 </div>
                 
                 {[
-                  { id: "Harian", icon: "☀️", label: "Harian" },
-                  { id: "Mingguan", icon: "📅", label: "Mingguan" },
-                  { id: "Bulanan", icon: "🗓️", label: "Bulanan" },
-                  { id: "Tahunan", icon: "🎯", label: "Tahunan" },
-                  { id: "Habit", icon: "🔁", label: "Habit" },
+                  { id: "Harian",   SvgIcon: Icons.Sun,      label: "Harian" },
+                  { id: "Mingguan", SvgIcon: Icons.Calendar,  label: "Mingguan" },
+                  { id: "Bulanan",  SvgIcon: Icons.Calendar,  label: "Bulanan" },
+                  { id: "Tahunan",  SvgIcon: Icons.Target,    label: "Tahunan" },
+                  { id: "Habit",    SvgIcon: Icons.Repeat,    label: "Habit" },
                 ].map((item) => {
                   const isActive = activePreview === item.id;
                   return (
-                    <div 
-                      key={item.id} 
+                    <div
+                      key={item.id}
                       onClick={() => setActivePreview(item.id)}
-                      style={{ 
+                      style={{
                         background: isActive ? "rgba(52,211,153,0.1)" : "transparent",
                         border: isActive ? "1px solid rgba(52,211,153,0.2)" : "1px solid transparent",
                         borderRadius: 8, padding: "7px 9px", marginBottom: 3,
-                        cursor: "pointer", transition: "all 0.2s"
+                        cursor: "pointer", transition: "all 0.2s",
+                        display: "flex", alignItems: "center", gap: 6,
                       }}
-                      onMouseEnter={(e) => { if(!isActive) e.currentTarget.style.background = "rgba(255,255,255,0.03)" }}
-                      onMouseLeave={(e) => { if(!isActive) e.currentTarget.style.background = "transparent" }}
+                      onMouseEnter={(e) => { if(!isActive) e.currentTarget.style.background = "rgba(255,255,255,0.03)"; }}
+                      onMouseLeave={(e) => { if(!isActive) e.currentTarget.style.background = "transparent"; }}
                     >
+                      <item.SvgIcon size={12} style={{ color: isActive ? "#34D399" : "#5C5C6B" }} />
                       <span style={{ fontSize: 11, color: isActive ? "#34D399" : "#5C5C6B", fontWeight: isActive ? 600 : 400 }}>
-                        {item.icon} {item.label}
+                        {item.label}
                       </span>
                     </div>
                   );
                 })}
                 <div style={{ marginTop: 12, background: "rgba(255,255,255,0.04)", borderRadius: 8, padding: "8px 10px", border: "1px solid rgba(255,255,255,0.05)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: "#34D399" }}>⭐ Level 3</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "#34D399", display: "flex", alignItems: "center", gap: 4 }}>
+                      <Icons.Star size={10} style={{ color: "#34D399" }} /> Level 3
+                    </span>
                     <span style={{ fontSize: 9, color: "#5C5C6B" }}>72/100 XP</span>
                   </div>
                   <div style={{ height: 3, background: "rgba(255,255,255,0.08)", borderRadius: 2, overflow: "hidden" }}>
@@ -273,11 +298,11 @@ export default function Home() {
               <div style={{ flex: 1, minHeight: 280, display: "flex", flexDirection: "column" }}>
                 <div style={{ fontSize: 11, color: "#5C5C6B", marginBottom: 4 }}>Pratinjau Halaman</div>
                 <div style={{ fontFamily: '"DM Serif Display", serif', fontSize: 24, color: "#F2F2F4", marginBottom: 16 }}>
-                  {activePreview === "Harian" && "Selamat Siang! 👋"}
-                  {activePreview === "Mingguan" && "Fokus Minggu Ini 🎯"}
-                  {activePreview === "Bulanan" && "Overview April 2026 🗓️"}
-                  {activePreview === "Tahunan" && "Resolusi 2026 🌟"}
-                  {activePreview === "Habit" && "Habit Tracker 🔥"}
+                  {activePreview === "Harian"   && "Selamat Siang!"}
+                  {activePreview === "Mingguan" && "Fokus Minggu Ini"}
+                  {activePreview === "Bulanan"  && "Overview April 2026"}
+                  {activePreview === "Tahunan"  && "Resolusi 2026"}
+                  {activePreview === "Habit"    && "Habit Tracker"}
                 </div>
                 
                 {/* Dynamic Content Body */}
@@ -298,7 +323,10 @@ export default function Home() {
                         ))}
                       </div>
                       <div style={{ background: "#0C0C0E", borderRadius: 10, padding: "12px 14px", border: "1px solid rgba(255,255,255,0.05)" }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "#F2F2F4", marginBottom: 10 }}>📋 Tugas Hari Ini</div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "#F2F2F4", marginBottom: 10, display: "flex", alignItems: "center", gap: 6 }}>
+                          <Icons.List size={12} style={{ color: "#9191A0" }} />
+                          Tugas Hari Ini
+                        </div>
                         {[
                           { text: "Belajar TypeScript 1 jam", done: true },
                           { text: "Meeting project jam 14.00", done: true },
@@ -399,8 +427,8 @@ export default function Home() {
                           <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 12, marginBottom: 12, borderBottom: i < 2 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
                             <div>
                                <div style={{ fontSize: 13, color: "#F2F2F4", fontWeight: 500 }}>{h.title}</div>
-                               <div style={{ fontSize: 11, color: h.streak > 0 ? "#FB7185" : "#5C5C6B", marginTop: 4, fontWeight: 600 }}>
-                                  {h.streak > 0 ? `${h.streak} day streak 🔥` : "No streak"}
+                               <div style={{ fontSize: 11, color: h.streak > 0 ? "#A0AEC0" : "#5C5C6B", marginTop: 4, fontWeight: 600 }}>
+                                  {h.streak > 0 ? `${h.streak} hari berturut` : "Belum mulai"}
                                </div>
                             </div>
                             <div style={{ display: "flex", gap: 3 }}>
@@ -456,10 +484,17 @@ export default function Home() {
             >
               <div style={{
                 width: 44, height: 44, borderRadius: 12,
-                background: `${f.color}15`, border: `1px solid ${f.color}25`,
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 22, marginBottom: 14,
-              }}>{f.icon}</div>
+                marginBottom: 14,
+              }}>
+                {f.icon === "sun"    && <Icons.Sun      size={20} style={{ color: f.color, opacity: 0.8 }} />}
+                {f.icon === "cal"    && <Icons.Calendar size={20} style={{ color: f.color, opacity: 0.8 }} />}
+                {f.icon === "target" && <Icons.Target   size={20} style={{ color: f.color, opacity: 0.8 }} />}
+                {f.icon === "repeat" && <Icons.Repeat   size={20} style={{ color: f.color, opacity: 0.8 }} />}
+                {f.icon === "cpu"    && <Icons.Cpu      size={20} style={{ color: f.color, opacity: 0.8 }} />}
+              </div>
               <h3 style={{ margin: "0 0 8px", fontSize: 15, fontWeight: 700, color: "#F2F2F4" }}>{f.title}</h3>
               <p style={{ margin: 0, fontSize: 13, color: "#5C5C6B", lineHeight: 1.65 }}>{f.desc}</p>
             </div>
@@ -474,11 +509,12 @@ export default function Home() {
         <div style={{ maxWidth: 580, margin: "0 auto" }}>
           <div style={{
             width: 72, height: 72, borderRadius: 20,
-            background: "linear-gradient(135deg, rgba(52,211,153,0.15), rgba(96,165,250,0.15))",
-            border: "1px solid rgba(52,211,153,0.2)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 32, margin: "0 auto 28px",
-          }}>🚀</div>
+            overflow: "hidden",
+            margin: "0 auto 28px",
+            boxShadow: "0 8px 32px rgba(52,211,153,0.25)",
+          }}>
+            <img src="/logos.png" alt="Rivanzee" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
           <h2 style={{ fontFamily: '"DM Serif Display", serif', fontSize: "clamp(30px, 4vw, 46px)", fontWeight: 400, color: "#F2F2F4", margin: "0 0 16px", letterSpacing: "-0.5px" }}>
             Mulai Perjalanan Produktifmu
           </h2>
@@ -518,7 +554,9 @@ export default function Home() {
       }}>
         {/* Logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 28, height: 28, background: "linear-gradient(135deg,#059669,#0D9488)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13 }}>📋</div>
+          <div style={{ width: 28, height: 28, borderRadius: 8, overflow: "hidden" }}>
+            <img src="/logos.png" alt="Rivanzee" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
           <span style={{ fontFamily: '"DM Serif Display", serif', fontSize: 16, color: "#F2F2F4" }}>Personal Planner</span>
         </div>
 

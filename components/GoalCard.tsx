@@ -41,18 +41,20 @@ function GoalCard({ goal, onUpdate, onDelete }: GoalCardProps) {
         e.currentTarget.style.borderColor = "var(--theme-border)";
       }}
     >
-      {/* Color accent bar */}
-      <div style={{ position: "absolute", top: 0, left: 0, width: 4, height: "100%", background: color, borderRadius: "14px 0 0 14px" }} />
+      {/* Subtle left border accent */}
+      <div style={{ position: "absolute", top: 0, left: 0, width: 3, height: "100%", background: color, borderRadius: "14px 0 0 14px", opacity: 0.4 }} />
 
       <div style={{ paddingLeft: 8 }}>
         {/* Category badge + delete */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <span style={{
             display: "inline-flex", alignItems: "center", gap: 4,
-            fontSize: 11, background: `${color}18`, color: color,
-            padding: "3px 8px", borderRadius: 20, fontWeight: 600, marginBottom: 8,
+            fontSize: 10, background: "var(--theme-surface-2)",
+            color: "var(--theme-ink-2)", border: "1px solid var(--theme-border)",
+            padding: "2px 8px", borderRadius: 4, fontWeight: 700,
+            letterSpacing: "0.06em", marginBottom: 8,
           }}>
-            {icon} {label}
+            {icon}
           </span>
           <button
             onClick={() => onDelete(goal.id)}

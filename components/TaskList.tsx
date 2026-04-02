@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo, memo } from "react";
 import { generateId } from "@/lib/utils";
 import type { Task } from "@/types";
 import { addXP } from "@/lib/storage";
+import { Icons } from "@/components/Icons";
 
 interface TaskListProps {
   tasks: Task[];
@@ -104,9 +105,9 @@ function TaskList({
             onFocus={e => e.target.style.borderColor = accentColor}
             onBlur={e => e.target.style.borderColor = "var(--theme-border)"}
           >
-            <option value="high">🔴 Tinggi</option>
-            <option value="medium">🟡 Sedang</option>
-            <option value="low">🟢 Rendah</option>
+            <option value="high">● Tinggi</option>
+            <option value="medium">● Sedang</option>
+            <option value="low">● Rendah</option>
           </select>
         )}
         <input
@@ -270,8 +271,9 @@ function TaskList({
       )}
 
       {tasks.length === 0 && (
-        <div style={{ textAlign: "center", padding: "24px 0", color: "var(--theme-muted)", fontSize: 13 }}>
-          Belum ada tugas. Tambahkan tugas pertamamu! 🚀
+        <div style={{ textAlign: "center", padding: "28px 0", color: "var(--theme-muted)", fontSize: 13 }}>
+          <Icons.FileText size={36} style={{ margin: "0 auto 10px", display: "block", opacity: 0.25, color: "var(--theme-ink-2)" }} />
+          Belum ada tugas. Tambahkan yang pertama!
         </div>
       )}
     </div>

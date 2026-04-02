@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import XPToast from "@/components/XPToast";
+import CommandPalette from "@/components/CommandPalette";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
@@ -48,6 +49,7 @@ export default function RootLayout({
           <AuthProvider>
             {children}
             <XPToast />
+            <CommandPalette />
           </AuthProvider>
         </ThemeProvider>
       </body>

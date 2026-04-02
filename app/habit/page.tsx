@@ -5,6 +5,8 @@ import Sidebar from "@/components/Sidebar";
 import HabitTrackerComponent from "@/components/HabitTracker";
 import { storage } from "@/lib/storage";
 import { formatDate } from "@/lib/utils";
+import { Icons } from "@/components/Icons";
+import AIHabitCoach from "@/components/AIHabitCoach";
 import type { Habit } from "@/types";
 
 export default function HabitPage() {
@@ -52,8 +54,9 @@ export default function HabitPage() {
           <div style={{ fontSize: 12, color: "var(--theme-muted)", marginBottom: 6, fontWeight: 500, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
             Habit Tracker
           </div>
-          <h1 style={{ margin: "0 0 6px", fontFamily: '"DM Serif Display", serif', fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 400, color: "var(--theme-ink)", letterSpacing: "-0.5px" }}>
-            Lacak Kebiasaanmu 🔁
+          <h1 style={{ margin: "0 0 6px", fontFamily: '"DM Serif Display", serif', fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 400, color: "var(--theme-ink)", letterSpacing: "-0.5px", display: "flex", alignItems: "center", gap: 10 }}>
+            <Icons.Repeat size={28} style={{ color: "var(--theme-ink-2)", opacity: 0.4 }} />
+            Lacak Kebiasaanmu
           </h1>
           <p style={{ margin: 0, fontSize: 14, color: "var(--theme-muted)" }}>
             Konsistensi adalah bahan bakar dari semua pencapaian besar.
@@ -96,14 +99,18 @@ export default function HabitPage() {
         {/* ── Habit Grid ── */}
         <div style={card}>
           <h2 style={{ margin: "0 0 20px", fontSize: 16, fontWeight: 700, color: "var(--theme-ink)", display: "flex", alignItems: "center", gap: 8 }}>
-            <span>📊</span> 7 Hari Terakhir
+            <Icons.BarChart size={15} style={{ color: "var(--theme-ink-2)", opacity: 0.5 }} />
+            7 Hari Terakhir
           </h2>
           <HabitTrackerComponent habits={habits} onUpdate={setHabits} />
         </div>
 
+        {/* ── AI Habit Coach ── */}
+        <AIHabitCoach habits={habits} />
+
         {/* ── Tips ── */}
         <div style={{ background: "rgba(52,211,153,0.05)", border: "1px solid rgba(52,211,153,0.12)", borderRadius: 16, padding: 20, marginTop: 20 }}>
-          <h3 style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "var(--theme-accent)" }}>💡 Tips Habit Tracker</h3>
+          <h3 style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "var(--theme-accent)" }}>Tips Habit Tracker</h3>
           <ul style={{ margin: 0, padding: "0 0 0 20px", display: "flex", flexDirection: "column", gap: 8 }}>
             {[
               "Mulai dengan 2-3 habit kecil yang mudah dilakukan setiap hari",

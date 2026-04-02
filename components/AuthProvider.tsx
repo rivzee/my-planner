@@ -19,10 +19,10 @@ function AuthLoader({ children }: { children: ReactNode }) {
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0C0C0E" }}>
         <div style={{ textAlign: "center", animation: "wa-fade-in 0.3s ease-out" }}>
           <div style={{
-            width: 56, height: 56, background: "linear-gradient(135deg, #059669, #0D9488)",
-            borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 26, margin: "0 auto 16px", boxShadow: "0 0 24px rgba(52,211,153,0.3)",
-          }}>📋</div>
+            width: 56, height: 56,
+            borderRadius: 16, overflow: "hidden",
+            margin: "0 auto 16px", boxShadow: "0 0 24px rgba(52,211,153,0.3)",
+          }}><img src="/logos.png" alt="Rivanzee" style={{ width: "100%", height: "100%", objectFit: "cover" }} /></div>
           <div style={{ fontFamily: '"DM Serif Display", serif', fontSize: 22, color: "#F2F2F4" }}>Rivanzee</div>
           <div style={{ fontSize: 12, color: "#5C5C6B", marginTop: 8, letterSpacing: "0.1em" }}>MEMUAT...</div>
         </div>

@@ -4,9 +4,10 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
 import TaskList from "@/components/TaskList";
+import { Icons } from "@/components/Icons";
 import AIRecommendation from "@/components/AIRecommendation";
-import dynamic from "next/dynamic";
-const WelcomeAnimation = dynamic(() => import("@/components/WelcomeAnimation"), { ssr: false });
+import AITaskPrioritizer from "@/components/AITaskPrioritizer";
+
 import { storage } from "@/lib/storage";
 import { getDayName } from "@/lib/utils";
 import type { Task, PlannerData } from "@/types";
@@ -94,7 +95,7 @@ export default function HarianPage() {
 
   return (
     <div className="page-wrapper">
-      <WelcomeAnimation name={session?.user?.name} />
+
       <Sidebar />
       <main className="page-main">
 
@@ -103,8 +104,9 @@ export default function HarianPage() {
           <div style={{ fontSize: 12, color: "var(--theme-muted)", marginBottom: 6, fontWeight: 500, letterSpacing: "0.04em", textTransform: "uppercase" as const }}>
             {dayName}, {dateStr}
           </div>
-          <h1 style={{ margin: "0 0 6px", fontFamily: '"DM Serif Display", serif', fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 400, color: "var(--theme-ink)", letterSpacing: "-0.5px" }}>
-            Selamat {greeting}! ☀️
+          <h1 style={{ margin: "0 0 6px", fontFamily: '"DM Serif Display", serif', fontSize: "clamp(24px, 3vw, 34px)", fontWeight: 400, color: "var(--theme-ink)", letterSpacing: "-0.5px", display: "flex", alignItems: "center", gap: 10 }}>
+            <Icons.Sun size={28} style={{ color: "var(--theme-ink-2)", opacity: 0.4 }} />
+            Selamat {greeting}.
           </h1>
           <p style={{ margin: 0, fontSize: 14, color: "var(--theme-muted)" }}>
             Rencana harian — tetap fokus dan selesaikan satu per satu.
@@ -139,21 +141,24 @@ export default function HarianPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
             <div style={card}>
               <h2 style={cardTitle}>
-                <span style={{ fontSize: 18 }}>🔥</span> Prioritas Utama
+                <Icons.Flame size={15} style={{ color: "var(--theme-ink-2)", opacity: 0.5 }} />
+                Prioritas Utama
               </h2>
               <TaskList tasks={priorityTasks} onUpdate={setPriorityTasks} title="" placeholder="Tambah prioritas utama hari ini..." showPriority={true} accentColor="var(--theme-coral)" />
             </div>
 
             <div style={card}>
               <h2 style={cardTitle}>
-                <span style={{ fontSize: 18 }}>📋</span> Daftar Tugas
+                <Icons.List size={15} style={{ color: "var(--theme-ink-2)", opacity: 0.5 }} />
+                Daftar Tugas
               </h2>
               <TaskList tasks={tasks} onUpdate={setTasks} title="" placeholder="Tambah tugas hari ini..." accentColor="var(--theme-accent)" />
             </div>
 
             <div style={card}>
               <h2 style={cardTitle}>
-                <span style={{ fontSize: 18 }}>📝</span> Catatan Bebas
+                <Icons.Edit size={15} style={{ color: "var(--theme-ink-2)", opacity: 0.5 }} />
+                Catatan Bebas
               </h2>
               <textarea
                 value={note}
@@ -197,6 +202,12 @@ export default function HarianPage() {
                 <div style={{ fontSize: 12, color: "var(--theme-muted)", marginTop: 4, fontWeight: 500 }}>Pending</div>
               </div>
             </div>
+
+            {/* AI Task Prioritizer */}
+            <AITaskPrioritizer
+              priorityTasks={priorityTasks}
+              regularTasks={tasks}
+            />
 
             {/* AI Recommendation */}
             <AIRecommendation plannerData={plannerData} />

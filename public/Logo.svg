@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 512 512" width="512" height="512">
+
+  <defs>
+    <!-- Main background gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#0A1A14"/>
+      <stop offset="50%"  stop-color="#072E20"/>
+      <stop offset="100%" stop-color="#0D3327"/>
+    </linearGradient>
+
+    <!-- Accent green gradient for strokes -->
+    <linearGradient id="strokeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#34D399"/>
+      <stop offset="100%" stop-color="#0D9488"/>
+    </linearGradient>
+
+    <!-- Subtle white glow gradient -->
+    <radialGradient id="glowCenter" cx="50%" cy="45%" r="40%">
+      <stop offset="0%"  stop-color="#34D399" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#34D399" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Bottom soft glow -->
+    <radialGradient id="glowBottom" cx="50%" cy="90%" r="35%">
+      <stop offset="0%"   stop-color="#059669" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#059669" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Clip to rounded square -->
+    <clipPath id="roundedSquare">
+      <rect x="0" y="0" width="512" height="512" rx="110" ry="110"/>
+    </clipPath>
+
+    <!-- Drop shadow filter -->
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+
+    <!-- Glow filter for accents -->
+    <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect x="0" y="0" width="512" height="512" rx="110" ry="110" fill="url(#bgGradient)"/>
+
+  <!-- Center glow -->
+  <rect x="0" y="0" width="512" height="512" rx="110" ry="110" fill="url(#glowCenter)"/>
+  <rect x="0" y="0" width="512" height="512" rx="110" ry="110" fill="url(#glowBottom)"/>
+
+  <!-- Subtle grid pattern to suggest a planner -->
+  <g clip-path="url(#roundedSquare)" opacity="0.06">
+    <line x1="170" y1="0" x2="170" y2="512" stroke="#34D399" stroke-width="1"/>
+    <line x1="256" y1="0" x2="256" y2="512" stroke="#34D399" stroke-width="1"/>
+    <line x1="342" y1="0" x2="342" y2="512" stroke="#34D399" stroke-width="1"/>
+    <line x1="0" y1="170" x2="512" y2="170" stroke="#34D399" stroke-width="1"/>
+    <line x1="0" y1="256" x2="512" y2="256" stroke="#34D399" stroke-width="1"/>
+    <line x1="0" y1="342" x2="512" y2="342" stroke="#34D399" stroke-width="1"/>
+  </g>
+
+  <!-- ── MAIN MARK ── -->
+  <g filter="url(#shadow)">
+
+    <!-- Calendar outer frame -->
+    <rect x="136" y="158" width="240" height="210" rx="18" ry="18"
+          fill="none"
+          stroke="url(#strokeGradient)"
+          stroke-width="9"
+          opacity="0.9"/>
+
+    <!-- Calendar header bar -->
+    <rect x="136" y="158" width="240" height="52" rx="18" ry="18"
+          fill="url(#strokeGradient)" opacity="0.18"/>
+
+    <!-- Calendar header notches (hanger pins) -->
+    <rect x="192" y="142" width="14" height="32" rx="7" ry="7"
+          fill="url(#strokeGradient)" opacity="0.85"/>
+    <rect x="306" y="142" width="14" height="32" rx="7" ry="7"
+          fill="url(#strokeGradient)" opacity="0.85"/>
+
+    <!-- Calendar grid dots (3×3) -->
+    <!-- Row 1 -->
+    <circle cx="190" cy="245" r="8" fill="#34D399" opacity="0.7"/>
+    <circle cx="256" cy="245" r="8" fill="#34D399" opacity="0.45"/>
+    <circle cx="322" cy="245" r="8" fill="#34D399" opacity="0.45"/>
+    <!-- Row 2 -->
+    <circle cx="190" cy="293" r="8" fill="#34D399" opacity="0.45"/>
+    <circle cx="256" cy="293" r="8" fill="#34D399" opacity="0.45"/>
+    <circle cx="322" cy="293" r="8" fill="#34D399" opacity="0.45"/>
+    <!-- Row 3 -->
+    <circle cx="190" cy="341" r="8" fill="#34D399" opacity="0.45"/>
+    <circle cx="256" cy="341" r="8" fill="#34D399" opacity="0.45"/>
+    <circle cx="322" cy="341" r="8" fill="#34D399" opacity="0.2"/>
+
+    <!-- Checkmark overlaid — prominent accent -->
+    <g filter="url(#glowFilter)">
+      <!-- Checkmark background circle (subtle) -->
+      <circle cx="289" cy="309" r="56"
+              fill="#059669" opacity="0.2"/>
+      <circle cx="289" cy="309" r="56"
+              fill="none"
+              stroke="url(#strokeGradient)"
+              stroke-width="2.5"
+              opacity="0.4"/>
+
+      <!-- The checkmark itself -->
+      <polyline points="261,309 281,331 322,284"
+                fill="none"
+                stroke="url(#strokeGradient)"
+                stroke-width="14"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                opacity="1"/>
+    </g>
+
+  </g>
+
+  <!-- Inner border highlight -->
+  <rect x="0" y="0" width="512" height="512" rx="110" ry="110"
+        fill="none"
+        stroke="rgba(52,211,153,0.12)"
+        stroke-width="1.5"/>
+
+</svg>

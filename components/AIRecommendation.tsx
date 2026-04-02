@@ -53,7 +53,7 @@ export default function AIRecommendation({ plannerData }: AIRecommendationProps)
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
         <div>
           <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "var(--theme-ink)" }}>
-            ✨ Rekomendasi AI
+            Rekomendasi AI
           </h3>
           <p style={{ margin: "3px 0 0", fontSize: 11, color: "var(--theme-muted)", display: "flex", alignItems: "center", gap: 4 }}>
             <span style={{ background: "linear-gradient(135deg,#4285F4,#34A853,#FBBC05,#EA4335)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontWeight: 700 }}>G</span>
@@ -100,7 +100,7 @@ export default function AIRecommendation({ plannerData }: AIRecommendationProps)
           borderRadius: 10, padding: 12,
           fontSize: 13, color: "var(--theme-coral)",
         }}>
-          ⚠️ {error}
+          {error}
         </div>
       )}
 
@@ -123,7 +123,7 @@ export default function AIRecommendation({ plannerData }: AIRecommendationProps)
           {/* Prioritas */}
           <div style={{ background: "var(--theme-surface-2)", border: "1px solid var(--theme-border)", borderRadius: 10, padding: 14 }}>
             <p style={{ margin: "0 0 8px", fontSize: 10, fontWeight: 700, color: "var(--theme-accent)", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>
-              🎯 Prioritas Hari Ini
+              Prioritas Hari Ini
             </p>
             <ol style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 5 }}>
               {result.prioritas.map((p, i) => (

@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import MonthCalendar from "@/components/MonthCalendar";
 import { storage, addXP } from "@/lib/storage";
 import { formatDate, generateId, getTodayString } from "@/lib/utils";
+import { Icons } from "@/components/Icons";
 import type { MonthlyTarget } from "@/types";
 
 const MONTH_NAMES = [
@@ -111,8 +112,9 @@ export default function BulananPage() {
             Perencanaan Bulanan
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" as const, gap: 12 }}>
-            <h1 style={{ margin: 0, fontFamily: '"DM Serif Display", serif', fontSize: "clamp(24px,3vw,34px)", fontWeight: 400, color: "var(--theme-ink)", letterSpacing: "-0.5px" }}>
-              Rencana Bulanan 🗓️
+            <h1 style={{ margin: 0, fontFamily: '"DM Serif Display", serif', fontSize: "clamp(24px,3vw,34px)", fontWeight: 400, color: "var(--theme-ink)", letterSpacing: "-0.5px", display: "flex", alignItems: "center", gap: 10 }}>
+              <Icons.Calendar size={28} style={{ color: "var(--theme-ink-2)", opacity: 0.4 }} />
+              Rencana Bulanan
             </h1>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <button onClick={prevMonth} style={navBtn} onMouseEnter={e => e.currentTarget.style.background="var(--theme-surface)"} onMouseLeave={e => e.currentTarget.style.background="var(--theme-surface-2)"}>←</button>
@@ -141,7 +143,8 @@ export default function BulananPage() {
             {/* Refleksi */}
             <div style={card}>
               <h3 style={{ margin: "0 0 14px", fontSize: 15, fontWeight: 700, color: "var(--theme-ink)", display: "flex", alignItems: "center", gap: 8 }}>
-                <span>💭</span> Refleksi Bulan Ini
+                <Icons.BookOpen size={15} style={{ color: "var(--theme-ink-2)", opacity: 0.5 }} />
+                Refleksi Bulan Ini
               </h3>
               <textarea
                 value={reflection}
@@ -164,7 +167,10 @@ export default function BulananPage() {
               {/* AI Evaluator */}
               <div style={{ padding: 18, background: "rgba(52,211,153,0.05)", border: "1px solid rgba(52,211,153,0.12)", borderRadius: 12 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <h4 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "var(--theme-accent)" }}>🤖 Laporan Evaluasi AI</h4>
+                  <h4 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "var(--theme-accent)", display: "flex", alignItems: "center", gap: 6 }}>
+                    <Icons.Cpu size={14} style={{ opacity: 0.7 }} />
+                    Laporan Evaluasi AI
+                  </h4>
                   <button
                     onClick={async () => {
                       setIsLoadingReview(true); setAiReview(null);
@@ -190,9 +196,9 @@ export default function BulananPage() {
                 </div>
                 {aiReview && (
                   <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 12 }}>
-                    <div><span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-accent)" }}>✨ Apresiasi</span><p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.6 }}>{aiReview.apresiasi}</p></div>
-                    <div><span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-amber)" }}>📊 Analisa Objektif</span><p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.6 }}>{aiReview.evaluasi}</p></div>
-                    <div><span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-coral)" }}>🚀 Rekomendasi</span><p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.6 }}>{aiReview.saran_bulan_depan}</p></div>
+                    <div><span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-accent)" }}>Apresiasi</span><p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.6 }}>{aiReview.apresiasi}</p></div>
+                    <div><span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-amber)" }}>Analisa Objektif</span><p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.6 }}>{aiReview.evaluasi}</p></div>
+                    <div><span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-coral)" }}>Rekomendasi</span><p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.6 }}>{aiReview.saran_bulan_depan}</p></div>
                   </div>
                 )}
                 {targets.length === 0 && !aiReview && (
@@ -205,7 +211,10 @@ export default function BulananPage() {
           {/* Right */}
           <div style={{ display: "flex", flexDirection: "column", gap: 20, position: "sticky", top: 32 }}>
             <div style={{ background: "rgba(251,191,36,0.07)", border: "1px solid rgba(251,191,36,0.18)", borderRadius: 16, padding: 20 }}>
-              <h3 style={{ margin: "0 0 10px", fontSize: 15, fontWeight: 700, color: "var(--theme-amber)", display: "flex", alignItems: "center", gap: 7 }}>🏆 Target {MONTH_NAMES[month]}</h3>
+              <h3 style={{ margin: "0 0 10px", fontSize: 15, fontWeight: 700, color: "var(--theme-amber)", display: "flex", alignItems: "center", gap: 7 }}>
+                <Icons.Award size={15} style={{ opacity: 0.7 }} />
+                Target {MONTH_NAMES[month]}
+              </h3>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
                 <span style={{ fontSize: 12, color: "var(--theme-muted)" }}>{completedCount}/{targets.length} selesai</span>
                 <span style={{ fontSize: 14, fontWeight: 700, color: "var(--theme-amber)" }}>{progressPct}%</span>
@@ -237,12 +246,12 @@ export default function BulananPage() {
                         {target.done && "✓"}
                       </button>
                       <span style={{ flex: 1, fontSize: 13, color: target.done ? "var(--theme-muted)" : "var(--theme-ink)", textDecoration: target.done ? "line-through" : "none" }}>{target.text}</span>
-                      <button onClick={() => editTargetNote(target.id)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, padding: 0, opacity: 0.6 }} title="Edit Catatan">📝</button>
+                      <button onClick={() => editTargetNote(target.id)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, padding: 0, opacity: 0.6 }} title="Edit Catatan">Catatan</button>
                       <button onClick={() => deleteTarget(target.id)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--theme-muted)", fontSize: 16, padding: "0 2px", transition: "color 0.15s" }} onMouseEnter={e => e.currentTarget.style.color = "var(--theme-coral)"} onMouseLeave={e => e.currentTarget.style.color = "var(--theme-muted)"} title="Hapus">×</button>
                     </div>
                     {target.note && (
                       <div style={{ marginTop: 6, paddingLeft: 28, fontSize: 12, color: "var(--theme-muted)", display: "flex", alignItems: "start", gap: 6 }}>
-                        <span>💡</span><span style={{ fontStyle: "italic", lineHeight: 1.4 }}>{target.note}</span>
+                        <span style={{ fontStyle: "italic", lineHeight: 1.4 }}>{target.note}</span>
                       </div>
                     )}
                   </div>
@@ -274,7 +283,7 @@ export default function BulananPage() {
                     onMouseEnter={e => e.currentTarget.style.background = "rgba(251,191,36,0.1)"}
                     onMouseLeave={e => e.currentTarget.style.background = "var(--theme-surface-2)"}
                   >
-                    Pindahkan Tertunda ke Bulan Depan ⏭️
+                    Pindahkan Tertunda ke Bulan Depan
                   </button>
                 </div>
               )}

@@ -95,11 +95,12 @@ export function getCategoryLabel(cat: string): string {
 }
 
 export function getCategoryIcon(cat: string): string {
+  // Returns a short uppercase abbreviation instead of an emoji
   const map: Record<string, string> = {
-    karier: "💼",
-    kesehatan: "🌿",
-    belajar: "📚",
-    keuangan: "💰",
+    karier: "KAR",
+    kesehatan: "KES",
+    belajar: "BLJ",
+    keuangan: "KEU",
   };
-  return map[cat] ?? "🎯";
+  return map[cat] ?? "—";
 }
