@@ -103,43 +103,6 @@ export default function Sidebar() {
   const isLoaded = status !== "loading";
   const user = session?.user;
 
-  const exportData = () => {
-    const data: Record<string, string> = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key) data[key] = localStorage.getItem(key) || "";
-    }
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `rivanzee-backup-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const importData = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (!confirm("Peringatan: Impor data akan menimpa data yang ada saat ini. Lanjutkan?")) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const data = JSON.parse(event.target?.result as string);
-        for (const key in data) {
-          localStorage.setItem(key, data[key]);
-        }
-        alert("Data berhasil diimpor! Halaman akan dimuat ulang.");
-        window.location.reload();
-      } catch (err) {
-        alert("Format file invalid atau bukan file backup.");
-      }
-    };
-    reader.readAsText(file);
-  };
-
-
-
   const sidebarContent = (
     <>
       {/* ── Logo ── */}
@@ -362,16 +325,7 @@ export default function Sidebar() {
         <p style={{ fontSize: 10.5, color: "var(--theme-muted)", margin: "5px 0 0", fontWeight: 500 }}>— {quote.author}</p>
       </div>
 
-      {/* ── Backup Data ── */}
-      <div style={{ margin: "12px 10px 0", display: "flex", gap: 6 }}>
-        <button onClick={exportData} style={{ flex: 1, padding: "7px 0", background: "var(--theme-surface-2)", border: "1px solid var(--theme-border)", borderRadius: 8, cursor: "pointer", fontSize: 11, fontWeight: 600, color: "var(--theme-ink-2)", transition: "all 0.15s", fontFamily: "inherit" }} onMouseEnter={e => e.currentTarget.style.color = "var(--theme-accent)"} onMouseLeave={e => e.currentTarget.style.color = "var(--theme-ink-2)"} title="Unduh data Planner">
-          ↓ Export Data
-        </button>
-        <label style={{ flex: 1, padding: "7px 0", background: "var(--theme-surface-2)", border: "1px solid var(--theme-border)", borderRadius: 8, cursor: "pointer", fontSize: 11, fontWeight: 600, color: "var(--theme-ink-2)", transition: "all 0.15s", textAlign: "center", fontFamily: "inherit", display: "inline-block" }} onMouseEnter={e => e.currentTarget.style.color = "var(--theme-blue)"} onMouseLeave={e => e.currentTarget.style.color = "var(--theme-ink-2)"} title="Kembalikan data dari backup">
-          ↑ Import Data
-          <input type="file" accept=".json" style={{ display: "none" }} onChange={importData} />
-        </label>
-      </div>
+
 
       {/* ── Bottom: Date display ── */}
       <div style={{ padding: "12px 10px 18px", marginTop: 8 }}>
