@@ -5,9 +5,11 @@ import type { AIResult, PlannerData } from "@/types";
 
 interface AIRecommendationProps {
   plannerData: PlannerData;
+  onAddPriority?: (text: string) => void;
 }
 
-export default function AIRecommendation({ plannerData }: AIRecommendationProps) {
+export default function AIRecommendation({ plannerData, onAddPriority }: AIRecommendationProps) {
+  const [addedItems, setAddedItems] = useState<Record<number, boolean>>({});
   const [result, setResult] = useState<AIResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +27,7 @@ export default function AIRecommendation({ plannerData }: AIRecommendationProps)
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setResult(data);
+      setAddedItems({});
     } catch (err) {
       setError(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
@@ -127,7 +130,45 @@ export default function AIRecommendation({ plannerData }: AIRecommendationProps)
             </p>
             <ol style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 5 }}>
               {result.prioritas.map((p, i) => (
-                <li key={i} style={{ fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.55 }}>{p}</li>
+                <li key={i} style={{ fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.55 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+                    <span style={{ flex: 1, marginTop: 2 }}>{p}</span>
+                    {onAddPriority && (
+                      <button
+                        onClick={() => {
+                          onAddPriority(p);
+                          setAddedItems(prev => ({ ...prev, [i]: true }));
+                        }}
+                        disabled={addedItems[i]}
+                        style={{
+                          background: addedItems[i] ? "transparent" : "rgba(52,211,153,0.1)",
+                          color: addedItems[i] ? "var(--theme-muted)" : "var(--theme-accent)",
+                          border: addedItems[i] ? "1px solid var(--theme-border)" : "1px solid transparent",
+                          borderRadius: 6,
+                          padding: "4px 8px",
+                          fontSize: 10,
+                          fontWeight: 700,
+                          cursor: addedItems[i] ? "default" : "pointer",
+                          transition: "all 0.2s",
+                          flexShrink: 0,
+                          marginTop: 2
+                        }}
+                        onMouseEnter={e => {
+                          if (!addedItems[i]) {
+                            e.currentTarget.style.background = "rgba(52,211,153,0.2)";
+                          }
+                        }}
+                        onMouseLeave={e => {
+                          if (!addedItems[i]) {
+                            e.currentTarget.style.background = "rgba(52,211,153,0.1)";
+                          }
+                        }}
+                      >
+                        {addedItems[i] ? "✔ Ditambahkan" : "+ Tambah"}
+                      </button>
+                    )}
+                  </div>
+                </li>
               ))}
             </ol>
           </div>
