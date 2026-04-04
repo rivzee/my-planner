@@ -229,7 +229,7 @@ export default function Sidebar() {
                   animation: "profileDropIn 0.15s ease-out",
                 }}>
                   <button
-                    onPointerDown={async (e) => { e.stopPropagation(); setProfileMenuOpen(false); await signOut({ redirect: false }); signIn("google"); }}
+                    onPointerDown={async (e) => { e.stopPropagation(); setProfileMenuOpen(false); signIn("google"); }}
                     style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", background: "transparent", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 12, fontWeight: 500, color: "var(--theme-ink-2)", transition: "all 0.12s", fontFamily: "inherit", textAlign: "left" as const }}
                     onMouseEnter={(e) => { e.currentTarget.style.background = "var(--theme-surface-2)"; e.currentTarget.style.color = "var(--theme-ink)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--theme-ink-2)"; }}
