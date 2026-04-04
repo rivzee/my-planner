@@ -38,8 +38,9 @@ export default function BulananPage() {
   const [input, setInput] = useState("");
   const [selectedDate, setSelectedDate] = useState(getTodayString());
   const [mounted, setMounted] = useState(false);
-  const [aiReview, setAiReview] = useState<{apresiasi: string; evaluasi: string; saran_bulan_depan: string} | null>(null);
+  const [aiReview, setAiReview] = useState<{apresiasi: string; evaluasi: string; saran_bulan_depan: string; saran_target_baru?: string[]} | null>(null);
   const [isLoadingReview, setIsLoadingReview] = useState(false);
+  const [addedAiTargets, setAddedAiTargets] = useState<Record<number, boolean>>({});
 
   const storageKey = `monthly-${year}-${month}`;
 
@@ -87,6 +88,12 @@ export default function BulananPage() {
   const handleReflectionChange = useCallback((val: string) => {
     setReflection(val);
   }, []);
+
+  const addTargetFromAI = useCallback((text: string, index: number) => {
+    const newTargets = [...targets, { id: generateId(), text, done: false }];
+    setTargets(newTargets); save(newTargets, reflection);
+    setAddedAiTargets(prev => ({ ...prev, [index]: true }));
+  }, [targets, reflection, save]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -199,6 +206,31 @@ export default function BulananPage() {
                     <div><span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-accent)" }}>Apresiasi</span><p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.6 }}>{aiReview.apresiasi}</p></div>
                     <div><span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-amber)" }}>Analisa Objektif</span><p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.6 }}>{aiReview.evaluasi}</p></div>
                     <div><span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-coral)" }}>Rekomendasi</span><p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.6 }}>{aiReview.saran_bulan_depan}</p></div>
+                    {aiReview.saran_target_baru && aiReview.saran_target_baru.length > 0 && (
+                      <div style={{ marginTop: 8 }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-accent)" }}>Ide Target AI:</span>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 8 }}>
+                          {aiReview.saran_target_baru.map((target, idx) => (
+                            <div key={idx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.03)", padding: "10px 12px", borderRadius: 8, border: "1px solid rgba(52,211,153,0.15)" }}>
+                              <span style={{ fontSize: 13, color: "var(--theme-ink)" }}>{target}</span>
+                              <button
+                                onClick={() => addTargetFromAI(target, idx)}
+                                disabled={addedAiTargets[idx]}
+                                style={{
+                                  background: addedAiTargets[idx] ? "transparent" : "rgba(52,211,153,0.15)",
+                                  color: addedAiTargets[idx] ? "var(--theme-muted)" : "var(--theme-accent)",
+                                  border: addedAiTargets[idx] ? "1px solid var(--theme-border)" : "1px solid transparent",
+                                  borderRadius: 6, padding: "5px 10px", fontSize: 11, fontWeight: 700,
+                                  cursor: addedAiTargets[idx] ? "default" : "pointer", transition: "all 0.2s", whiteSpace: "nowrap"
+                                }}
+                              >
+                                {addedAiTargets[idx] ? "✔ Ditambahkan" : "+ Tambah"}
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
                 {targets.length === 0 && !aiReview && (

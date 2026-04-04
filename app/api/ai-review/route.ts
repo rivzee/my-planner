@@ -43,7 +43,8 @@ Balas HANYA dengan format JSON yang ketat (tanpa markdown), menggunakan struktur
 {
   "apresiasi": "Satu paragraf pujian atas pencapaian atau usaha mereka bulan ini.",
   "evaluasi": "Satu paragraf evaluasi objektif tentang hal yang tidak tercapai (tertunda) atau catatan overachieve mereka.",
-  "saran_bulan_depan": "Satu paragraf langkah strategis/nasehat nyata untuk bulan berikutnya."
+  "saran_bulan_depan": "Satu paragraf langkah strategis/nasehat nyata untuk bulan berikutnya.",
+  "saran_target_baru": ["Ide target baru 1", "Ide target baru 2", "Ide target baru 3"]
 }
 `;
 

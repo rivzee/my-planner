@@ -6,6 +6,7 @@ import GoalCard from "@/components/GoalCard";
 import { storage } from "@/lib/storage";
 import { generateId, getDaysUntilYearEnd, getYearProgress, getCategoryColor, getCategoryIcon, getCategoryLabel } from "@/lib/utils";
 import { Icons } from "@/components/Icons";
+import AISuggester from "@/components/AISuggester";
 import type { Goal } from "@/types";
 
 const CATEGORIES: Array<{ id: "karier" | "kesehatan" | "belajar" | "keuangan"; label: string }> = [
@@ -186,6 +187,20 @@ export default function TahunanPage() {
                 Batal
               </button>
             </div>
+          </div>
+        )}
+
+        {!showForm && (
+          <div style={{ marginBottom: 24, maxWidth: 600 }}>
+            <AISuggester
+              type="tahunan"
+              contextData={{ goalCount: goals.length }}
+              onAdd={(text) => {
+                setGoals(prev => [...prev, { id: generateId(), title: text, category: "karier", target: "Tentukan spesifikasinya...", progress: 0, year: currentYear }]);
+              }}
+              accentColor="var(--theme-blue)"
+              buttonLabel="✨ Minta Resolusi & Ide Goal Tahunan"
+            />
           </div>
         )}
 

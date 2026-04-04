@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
@@ -227,6 +227,21 @@ export default function DashboardPage() {
     setXp(getXP());
   }, []);
 
+  const handleAddPriorityFromBriefing = useCallback((text: string) => {
+    const dailyPriority = storage.get<Task[]>("daily-priority") || [];
+    if (!dailyPriority.some(t => t.text === text)) {
+      dailyPriority.push({
+        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+        text,
+        done: false,
+        priority: "high",
+        createdAt: new Date().toISOString()
+      });
+      storage.set("daily-priority", dailyPriority);
+      alert("✓ Fokus utama berhasil ditambahkan ke Prioritas Harian!");
+    }
+  }, []);
+
   const today = new Date();
   const hour = today.getHours();
   const greeting = hour < 10 ? "Selamat Pagi" : hour < 15 ? "Selamat Siang" : hour < 18 ? "Selamat Sore" : "Selamat Malam";
@@ -322,6 +337,7 @@ export default function DashboardPage() {
           weeklyFocus={weeklyFocus}
           xp={xp}
           level={currentLevel}
+          onAddPriority={handleAddPriorityFromBriefing}
         />
 
         {/* ── Stats Grid ── */}

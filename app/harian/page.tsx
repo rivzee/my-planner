@@ -73,6 +73,18 @@ export default function HarianPage() {
     }
   }, [priorityTasks, tasks]);
 
+  const handleAddTask = useCallback((text: string) => {
+    if (!priorityTasks.some(t => t.text === text) && !tasks.some(t => t.text === text)) {
+      setTasks(prev => [...prev, {
+        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+        text,
+        done: false,
+        priority: "medium", // Default for regular task
+        createdAt: new Date().toISOString()
+      }]);
+    }
+  }, [priorityTasks, tasks]);
+
   const todayStr = useMemo(() => {
     const d = new Date();
     return d.toISOString().split("T")[0]; // Just as a dependency boundary if needed, though today won't change
@@ -225,6 +237,7 @@ export default function HarianPage() {
             <AIRecommendation 
               plannerData={plannerData} 
               onAddPriority={handleAddPriority} 
+              onAddTask={handleAddTask}
             />
           </div>
         </div>

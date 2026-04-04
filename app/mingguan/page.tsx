@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import TaskList from "@/components/TaskList";
 import WeekGrid from "@/components/WeekGrid";
 import { Icons } from "@/components/Icons";
+import AISuggester from "@/components/AISuggester";
 import { storage } from "@/lib/storage";
 import { getWeekDates, formatDate, getDayName } from "@/lib/utils";
 import type { Task } from "@/types";
@@ -125,6 +126,13 @@ export default function MingguanPage() {
               Tugas fleksibel minggu ini — dikerjakan kapan saja sebelum akhir minggu.
             </p>
             <TaskList tasks={tasks} onUpdate={setTasks} title="" placeholder="Tambah tugas untuk minggu ini..." accentColor="var(--theme-blue)" />
+            <AISuggester 
+              type="mingguan" 
+              contextData={{ focus: weeklyFocus, taskCount: tasks.length }}
+              onAdd={(text) => setTasks(prev => [...prev, { id: Date.now().toString(), text, done: false, createdAt: new Date().toISOString() }])}
+              accentColor="var(--theme-blue)" 
+              buttonLabel="✨ Dapat Rekomendasi Tugas" 
+            />
           </div>
 
           {/* Right */}

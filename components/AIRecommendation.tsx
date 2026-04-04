@@ -6,10 +6,12 @@ import type { AIResult, PlannerData } from "@/types";
 interface AIRecommendationProps {
   plannerData: PlannerData;
   onAddPriority?: (text: string) => void;
+  onAddTask?: (text: string) => void;
 }
 
-export default function AIRecommendation({ plannerData, onAddPriority }: AIRecommendationProps) {
-  const [addedItems, setAddedItems] = useState<Record<number, boolean>>({});
+export default function AIRecommendation({ plannerData, onAddPriority, onAddTask }: AIRecommendationProps) {
+  const [addedPriority, setAddedPriority] = useState<Record<number, boolean>>({});
+  const [addedTask, setAddedTask] = useState<Record<number, boolean>>({});
   const [result, setResult] = useState<AIResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,8 @@ export default function AIRecommendation({ plannerData, onAddPriority }: AIRecom
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setResult(data);
-      setAddedItems({});
+      setAddedPriority({});
+      setAddedTask({});
     } catch (err) {
       setError(err instanceof Error ? err.message : "Terjadi kesalahan");
     } finally {
@@ -131,42 +134,46 @@ export default function AIRecommendation({ plannerData, onAddPriority }: AIRecom
             <ol style={{ margin: 0, paddingLeft: 18, display: "flex", flexDirection: "column", gap: 5 }}>
               {result.prioritas.map((p, i) => (
                 <li key={i} style={{ fontSize: 13, color: "var(--theme-ink-2)", lineHeight: 1.55 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
-                    <span style={{ flex: 1, marginTop: 2 }}>{p}</span>
-                    {onAddPriority && (
-                      <button
-                        onClick={() => {
-                          onAddPriority(p);
-                          setAddedItems(prev => ({ ...prev, [i]: true }));
-                        }}
-                        disabled={addedItems[i]}
-                        style={{
-                          background: addedItems[i] ? "transparent" : "rgba(52,211,153,0.1)",
-                          color: addedItems[i] ? "var(--theme-muted)" : "var(--theme-accent)",
-                          border: addedItems[i] ? "1px solid var(--theme-border)" : "1px solid transparent",
-                          borderRadius: 6,
-                          padding: "4px 8px",
-                          fontSize: 10,
-                          fontWeight: 700,
-                          cursor: addedItems[i] ? "default" : "pointer",
-                          transition: "all 0.2s",
-                          flexShrink: 0,
-                          marginTop: 2
-                        }}
-                        onMouseEnter={e => {
-                          if (!addedItems[i]) {
-                            e.currentTarget.style.background = "rgba(52,211,153,0.2)";
-                          }
-                        }}
-                        onMouseLeave={e => {
-                          if (!addedItems[i]) {
-                            e.currentTarget.style.background = "rgba(52,211,153,0.1)";
-                          }
-                        }}
-                      >
-                        {addedItems[i] ? "✔ Ditambahkan" : "+ Tambah"}
-                      </button>
-                    )}
+                  <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+                    <span style={{ flex: 1, minWidth: "60%" }}>{p}</span>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      {onAddPriority && (
+                        <button
+                          onClick={() => {
+                            onAddPriority(p);
+                            setAddedPriority(prev => ({ ...prev, [i]: true }));
+                          }}
+                          disabled={addedPriority[i]}
+                          style={{
+                            background: addedPriority[i] ? "transparent" : "rgba(251,113,133,0.1)",
+                            color: addedPriority[i] ? "var(--theme-muted)" : "var(--theme-coral)",
+                            border: addedPriority[i] ? "1px solid var(--theme-border)" : "1px solid transparent",
+                            borderRadius: 6, padding: "5px 8px", fontSize: 10, fontWeight: 700,
+                            cursor: addedPriority[i] ? "default" : "pointer", transition: "all 0.2s"
+                          }}
+                        >
+                          {addedPriority[i] ? "✔" : "+ Prioritas"}
+                        </button>
+                      )}
+                      {onAddTask && (
+                        <button
+                          onClick={() => {
+                            onAddTask(p);
+                            setAddedTask(prev => ({ ...prev, [i]: true }));
+                          }}
+                          disabled={addedTask[i]}
+                          style={{
+                            background: addedTask[i] ? "transparent" : "rgba(52,211,153,0.1)",
+                            color: addedTask[i] ? "var(--theme-muted)" : "var(--theme-accent)",
+                            border: addedTask[i] ? "1px solid var(--theme-border)" : "1px solid transparent",
+                            borderRadius: 6, padding: "5px 8px", fontSize: 10, fontWeight: 700,
+                            cursor: addedTask[i] ? "default" : "pointer", transition: "all 0.2s"
+                          }}
+                        >
+                          {addedTask[i] ? "✔" : "+ Tugas"}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </li>
               ))}

@@ -18,6 +18,7 @@ interface DailyBriefingProps {
   weeklyFocus: string;
   xp: number;
   level: number;
+  onAddPriority?: (text: string) => void;
 }
 
 // Shimmer loading skeleton
@@ -37,12 +38,13 @@ function ShimmerLine({ width = "100%", height = 14 }: { width?: string; height?:
 }
 
 export default function DailyBriefing({
-  userName, tasks, habits, monthlyTargets, weeklyFocus, xp, level,
+  userName, tasks, habits, monthlyTargets, weeklyFocus, xp, level, onAddPriority
 }: DailyBriefingProps) {
   const [data, setData] = useState<BriefingData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dismissed, setDismissed] = useState(false);
+  const [addedFokus, setAddedFokus] = useState(false);
 
   const fetchBriefing = useCallback(async () => {
     setLoading(true);
@@ -194,12 +196,33 @@ export default function DailyBriefing({
             </div>
 
             {/* Fokus Utama */}
-            <div style={{ background: "rgba(52,211,153,0.06)", borderRadius: 12, padding: "12px 14px", border: "1px solid rgba(52,211,153,0.12)" }}>
-              <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#34D399", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-                Fokus Utama
+            <div style={{ background: "rgba(52,211,153,0.06)", borderRadius: 12, padding: "12px 14px", border: "1px solid rgba(52,211,153,0.12)", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
+              <div>
+                <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#34D399", marginBottom: 6, display: "flex", alignItems: "center", gap: 5 }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                  Fokus Utama
+                </div>
+                <p style={{ margin: 0, fontSize: 13.5, color: "#A7F3D0", lineHeight: 1.6, fontWeight: 600 }}>{data.fokus_utama}</p>
               </div>
-              <p style={{ margin: 0, fontSize: 13.5, color: "#A7F3D0", lineHeight: 1.6, fontWeight: 600 }}>{data.fokus_utama}</p>
+              {onAddPriority && (
+                <button
+                  onClick={() => {
+                    onAddPriority(data.fokus_utama);
+                    setAddedFokus(true);
+                  }}
+                  disabled={addedFokus}
+                  style={{
+                    background: addedFokus ? "transparent" : "rgba(251,113,133,0.1)",
+                    color: addedFokus ? "rgba(255,255,255,0.4)" : "var(--theme-coral)",
+                    border: addedFokus ? "1px solid rgba(255,255,255,0.1)" : "1px solid transparent",
+                    borderRadius: 6, padding: "6px 10px", fontSize: 11, fontWeight: 700,
+                    cursor: addedFokus ? "default" : "pointer", transition: "all 0.2s",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  {addedFokus ? "✔ Di-Prioritas" : "+ Prioritaskan"}
+                </button>
+              )}
             </div>
 
             {/* Insight */}
