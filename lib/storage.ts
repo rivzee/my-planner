@@ -1,8 +1,32 @@
 // Storage prefix saat ini (bisa diubah saat user login)
 let _userPrefix = "guest";
+let _lastSyncedUser = ""; 
+let _isSyncing = false;
 
-export function setStorageUser(userId: string) {
+// Pull data dari Vercel Postgres ke localStorage saat login
+export async function setStorageUser(userId: string) {
   _userPrefix = userId;
+
+  if (userId !== "guest" && _lastSyncedUser !== userId) {
+    _lastSyncedUser = userId;
+    try {
+      _isSyncing = true;
+      const res = await fetch(`/api/sync?userId=${userId}`);
+      if (res.ok) {
+        const { data } = await res.json();
+        if (data && data.length > 0) {
+          data.forEach((row: any) => {
+            const localKey = `planner-${userId}-${row.key}`;
+            localStorage.setItem(localKey, JSON.stringify(row.value));
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Failed to sync from PG:", e);
+    } finally {
+      _isSyncing = false;
+    }
+  }
 }
 
 export const storage = {
@@ -13,7 +37,18 @@ export const storage = {
   },
   set: (key: string, value: unknown) => {
     if (typeof window === "undefined") return;
+    
+    // Save locally for instant UI update
     localStorage.setItem(`planner-${_userPrefix}-${key}`, JSON.stringify(value));
+    
+    // Background sync to Postgres if logged in and not currently auto-syncing the load
+    if (_userPrefix !== "guest" && !_isSyncing) {
+      fetch("/api/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: _userPrefix, key, value })
+      }).catch(err => console.error("Sync failed:", err));
+    }
   },
   remove: (key: string) => {
     if (typeof window === "undefined") return;
