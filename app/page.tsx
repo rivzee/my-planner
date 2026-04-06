@@ -143,67 +143,40 @@ export default function Home() {
           didukung kecerdasan AI untuk membantumu mencapai tujuan lebih cepat.
         </p>
 
-        {/* CTA Buttons & Social Proof */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <button
-              onClick={() => signIn("google")}
-              className="animate-pulse-glow"
-              style={{
-                display: "flex", alignItems: "center", gap: 10,
-                padding: "16px 32px",
-                background: "#34D399", color: "#052e16",
-                border: "none", borderRadius: 14,
-                cursor: "pointer", fontSize: 16, fontWeight: 700,
-                transition: "all 0.3s",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0) scale(1)"; }}
-            >
-              <GoogleIcon size={18} />
-              Mulai dengan Google — Gratis
-            </button>
-            <a
-              href="#fitur"
-              style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "16px 28px",
-                background: "rgba(255,255,255,0.03)", color: "#9191A0",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: 14, cursor: "pointer", fontSize: 15, fontWeight: 600,
-                textDecoration: "none", transition: "all 0.2s",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "#F2F2F4"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.color = "#9191A0"; }}
-            >
-              Lihat Fitur ↓
-            </a>
-          </div>
-
-          {/* Social Proof */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ display: "flex" }}>
-              {[
-                "https://api.dicebear.com/7.x/notionists/svg?seed=Felix",
-                "https://api.dicebear.com/7.x/notionists/svg?seed=Aneka",
-                "https://api.dicebear.com/7.x/notionists/svg?seed=Jack",
-                "https://api.dicebear.com/7.x/notionists/svg?seed=Sarah",
-              ].map((src, i) => (
-                <div key={i} style={{
-                  width: 34, height: 34, borderRadius: 17, background: "#1C1C21",
-                  border: "2px solid #0C0C0E", marginLeft: i > 0 ? -12 : 0,
-                  overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center"
-                }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt="User" style={{ width: 28, height: 28 }} />
-                </div>
-              ))}
-            </div>
-            <div style={{ textAlign: "left" }}>
-              <div style={{ display: "flex", color: "#FBBF24", fontSize: 13, marginBottom: 2, letterSpacing: "2px" }}>★★★★★</div>
-              <div style={{ fontSize: 12, color: "#9191A0" }}>Bergabung dengan <strong style={{ color: "#F2F2F4" }}>+1.000</strong> lainnya</div>
-            </div>
-          </div>
+        {/* CTA Buttons */}
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <button
+            onClick={() => signIn("google")}
+            className="animate-pulse-glow"
+            style={{
+              display: "flex", alignItems: "center", gap: 10,
+              padding: "16px 32px",
+              background: "#34D399", color: "#052e16",
+              border: "none", borderRadius: 14,
+              cursor: "pointer", fontSize: 16, fontWeight: 700,
+              transition: "all 0.3s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px) scale(1.02)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0) scale(1)"; }}
+          >
+            <GoogleIcon size={18} />
+            Mulai dengan Google — Gratis
+          </button>
+          <a
+            href="#fitur"
+            style={{
+              display: "flex", alignItems: "center", gap: 6,
+              padding: "16px 28px",
+              background: "rgba(255,255,255,0.03)", color: "#9191A0",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: 14, cursor: "pointer", fontSize: 15, fontWeight: 600,
+              textDecoration: "none", transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "#F2F2F4"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.03)"; e.currentTarget.style.color = "#9191A0"; }}
+          >
+            Lihat Fitur ↓
+          </a>
         </div>
 
         {/* Stats */}
