@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   const dayName = now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 
   const prompt = `
-Kamu adalah "Rivanzee AI Coach" — asisten produktivitas premium yang memberikan briefing pagi/siang/sore/malam kepada pengguna.
+Kamu adalah "MyPlanner AI Coach" — asisten produktivitas premium yang memberikan briefing pagi/siang/sore/malam kepada pengguna.
 
 Nama pengguna: ${userName || "Pengguna"}
 Waktu sekarang: ${timeOfDay} (${dayName})

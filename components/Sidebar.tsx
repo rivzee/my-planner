@@ -9,6 +9,7 @@ import type { Quote } from "@/types";
 import { QUOTES } from "@/lib/quotes";
 import { getXP, setStorageUser } from "@/lib/storage";
 import { useSession, signIn, signOut } from "next-auth/react";
+import Logo from "./Logo";
 
 
 const navItems = [
@@ -50,7 +51,6 @@ export default function Sidebar() {
   const { data: session, status } = useSession();
 
   const [quote, setQuote] = useState<Quote>(getDailyQuote());
-  const [xp, setXp] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
@@ -64,7 +64,6 @@ export default function Sidebar() {
       }
     };
     if (profileMenuOpen) {
-      // Use 'click' instead of 'mousedown' to avoid intercepting button clicks inside dropdown
       document.addEventListener("click", handleClickOutside);
     }
     return () => document.removeEventListener("click", handleClickOutside);
@@ -80,25 +79,11 @@ export default function Sidebar() {
     const userId = (session?.user as any)?.id;
     setStorageUser(userId ?? "guest");
     setQuote(getDailyQuote());
-    setXp(getXP());
-
-    const handleXPChange = () => setXp(getXP());
-    window.addEventListener("xp-changed", handleXPChange);
-    return () => window.removeEventListener("xp-changed", handleXPChange);
   }, [session]);
-
-  useEffect(() => {
-    setXp(getXP());
-  }, [(session?.user as any)?.id]);
 
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
-
-  const LEVEL_UP_XP = 100;
-  const currentLevel = Math.floor(xp / LEVEL_UP_XP) + 1;
-  const xpInCurrentLevel = xp % LEVEL_UP_XP;
-  const progressPct = (xpInCurrentLevel / LEVEL_UP_XP) * 100;
 
   const isLoaded = status !== "loading";
   const user = session?.user;
@@ -108,17 +93,9 @@ export default function Sidebar() {
       {/* ── Logo ── */}
       <div style={{ padding: "8px 16px 16px", borderBottom: `1px solid var(--theme-sidebar-border)` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-          <div style={{
-            width: 34, height: 34,
-            borderRadius: 10,
-            overflow: "hidden",
-            flexShrink: 0,
-            boxShadow: "0 2px 10px rgba(52,211,153,0.2)",
-          }}>
-            <img src="/logos.png" alt="Rivanzee" style={{ width: "100%", height: "100%", display: "block", objectFit: "cover" }} />
-          </div>
+          <Logo size={34} />
           <div>
-            <div style={{ fontFamily: '"DM Serif Display", serif', fontSize: 17, color: "var(--theme-ink)", lineHeight: 1.2 }}>Rivanzee</div>
+            <div style={{ fontFamily: '"DM Serif Display", serif', fontSize: 17, color: "var(--theme-ink)", lineHeight: 1.2 }}>MyPlanner</div>
             <div style={{ fontSize: 10, color: "var(--theme-muted)", fontWeight: 500, letterSpacing: "0.02em" }}>Personal Planner</div>
           </div>
           {/* Mobile close button */}
@@ -231,20 +208,52 @@ export default function Sidebar() {
           )
         )}
 
-        {/* XP Bar */}
-        <div style={{ marginTop: 10, padding: "10px 12px", background: "var(--theme-surface-2)", borderRadius: 10, border: `1px solid var(--theme-border)` }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <span style={{ fontSize: 12, fontWeight: 700, color: "var(--theme-accent)" }}>Lv.{currentLevel}</span>
-              <span style={{ fontSize: 11, color: "var(--theme-muted)", fontWeight: 500 }}>Explorer</span>
-            </div>
-            <span style={{ fontSize: 10, fontWeight: 600, color: "var(--theme-muted)" }}>{xpInCurrentLevel}/{LEVEL_UP_XP} XP</span>
+        {/* Command Menu Trigger (Cmd+K) */}
+        <button
+          onClick={() => {
+            window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }));
+          }}
+          style={{
+            width: "100%",
+            marginTop: 10,
+            padding: "8px 10px",
+            background: "var(--theme-surface-2)",
+            borderRadius: 8,
+            border: "1px solid var(--theme-border)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            cursor: "pointer",
+            color: "var(--theme-ink-2)",
+            transition: "all 0.15s ease",
+            fontFamily: "inherit",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "var(--theme-border-2)";
+            e.currentTarget.style.background = "var(--theme-surface-3)";
+            e.currentTarget.style.color = "var(--theme-ink)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--theme-border)";
+            e.currentTarget.style.background = "var(--theme-surface-2)";
+            e.currentTarget.style.color = "var(--theme-ink-2)";
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span>Cari atau Lompat...</span>
           </div>
-          <div style={{ height: 5, background: "var(--theme-border)", borderRadius: 999, overflow: "hidden" }}>
-            <div style={{ height: "100%", width: `${progressPct}%`, background: "linear-gradient(90deg, #22C55E, #16A34A)", borderRadius: 999, transition: "width 0.5s cubic-bezier(0.16,1,0.3,1)" }} />
-          </div>
-        </div>
+          <kbd style={{
+            padding: "2px 5px",
+            fontSize: 10,
+            borderRadius: 4,
+            background: "var(--theme-surface)",
+            border: "1px solid var(--theme-border)",
+            color: "var(--theme-muted)",
+            fontWeight: 600,
+            lineHeight: 1,
+          }}>⌘K</kbd>
+        </button>
       </div>
 
       {/* ── Navigation ── */}
@@ -264,7 +273,7 @@ export default function Sidebar() {
                 borderRadius: 9,
                 marginBottom: 1,
                 textDecoration: "none",
-                background: isActive ? "rgba(22,163,74,0.08)" : "transparent",
+                background: isActive ? "rgba(16,185,129,0.08)" : "transparent",
                 color: isActive ? "var(--theme-accent)" : "var(--theme-ink-2)",
                 transition: "all 0.15s ease",
                 fontWeight: isActive ? 600 : 400,
@@ -308,21 +317,23 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* ── Quote ── */}
-      <div style={{ margin: "0 10px", padding: "12px 14px", background: "var(--theme-surface-2)", border: `1px solid var(--theme-border)`, borderRadius: 12 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, color: "var(--theme-accent)", letterSpacing: "0.08em", textTransform: "uppercase" as const }}>Quote</span>
+      {/* ── Quiet Focus Status / Daily Thought ── */}
+      <div style={{ margin: "0 10px", padding: "10px 12px", background: "var(--theme-surface-2)", border: `1px solid var(--theme-border)`, borderRadius: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--theme-muted)", textTransform: "uppercase", letterSpacing: "0.06em" }}>Refleksi Hari Ini</span>
           <button
             onClick={refreshQuote}
-            style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, padding: "2px 4px", color: "var(--theme-muted)", lineHeight: 1, borderRadius: 4 }}
-            onMouseEnter={(e) => e.currentTarget.style.background = "var(--theme-surface)"}
-            onMouseLeave={(e) => e.currentTarget.style.background = "none"}
+            title="Ganti refleksi"
+            style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: "var(--theme-muted)", padding: "2px" }}
+            onMouseEnter={(e) => e.currentTarget.style.color = "var(--theme-ink)"}
+            onMouseLeave={(e) => e.currentTarget.style.color = "var(--theme-muted)"}
           >
-            ↺
+            ↻
           </button>
         </div>
-        <p style={{ fontSize: 11.5, color: "var(--theme-ink)", fontStyle: "italic", lineHeight: 1.6, margin: 0 }}>&ldquo;{quote.text}&rdquo;</p>
-        <p style={{ fontSize: 10.5, color: "var(--theme-muted)", margin: "5px 0 0", fontWeight: 500 }}>— {quote.author}</p>
+        <p style={{ fontSize: 11, color: "var(--theme-ink-2)", lineHeight: 1.5, margin: 0 }}>
+          &ldquo;{quote.text}&rdquo;
+        </p>
       </div>
 
 
@@ -368,7 +379,7 @@ export default function Sidebar() {
           <div style={{ width: 28, height: 28, background: "transparent", border: "1px solid var(--theme-border)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--theme-ink)" }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           </div>
-          <span style={{ fontFamily: '"DM Serif Display", serif', fontSize: 16, color: "var(--theme-ink)" }}>Rivanzee</span>
+          <span style={{ fontFamily: '"DM Serif Display", serif', fontSize: 16, color: "var(--theme-ink)" }}>MyPlanner</span>
         </div>
         <button
           onClick={() => setMobileOpen(true)}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Logo from "./Logo";
 
 interface WelcomeAnimationProps {
   name?: string | null;
@@ -11,7 +12,7 @@ export default function WelcomeAnimation({ name }: WelcomeAnimationProps) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const key = "rivanzee-welcomed-v4";
+    const key = "myplanner-welcomed-v1";
     if (sessionStorage.getItem(key)) return;
     sessionStorage.setItem(key, "1");
 
@@ -48,7 +49,7 @@ export default function WelcomeAnimation({ name }: WelcomeAnimationProps) {
 
   if (phase === "hidden") return null;
 
-  const firstName = name?.split(" ")[0] ?? "Rivanzee";
+  const firstName = name?.split(" ")[0] ?? "Pengguna";
   const hour = new Date().getHours();
   const timeLabel = hour < 10 ? "Selamat Pagi" : hour < 15 ? "Selamat Siang" : hour < 18 ? "Selamat Sore" : "Selamat Malam";
 
@@ -293,31 +294,12 @@ export default function WelcomeAnimation({ name }: WelcomeAnimationProps) {
             }} />
 
             {/* Logo image */}
-            <div style={{
-              width: 96, height: 96,
-              borderRadius: 26,
-              overflow: "hidden",
-              position: "relative",
-              boxShadow: "0 0 0 1px rgba(22,163,74,0.25), 0 12px 40px rgba(22,163,74,0.25), 0 4px 16px rgba(0,0,0,0.4)",
-              animation: "wa-logo-float 3s ease-in-out 0.5s infinite",
-            }}>
-              <img
-                src="/logos.png"
-                alt="Rivanzee"
-                style={{
-                  width: "100%", height: "100%",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-              {/* Shine overlay */}
-              <div style={{
-                position: "absolute", inset: 0,
-                borderRadius: 26,
-                background: "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 50%)",
-                pointerEvents: "none",
-              }} />
-            </div>
+            <Logo
+              size={96}
+              style={{
+                animation: "wa-logo-float 3s ease-in-out 0.5s infinite",
+              }}
+            />
           </div>
 
           {/* ── Brand Name ── */}
@@ -333,7 +315,7 @@ export default function WelcomeAnimation({ name }: WelcomeAnimationProps) {
               textAlign: "center",
               lineHeight: 1.2,
             }}>
-              Rivanzee
+              MyPlanner
             </div>
             <div style={{
               fontSize: 11,
@@ -450,7 +432,7 @@ export default function WelcomeAnimation({ name }: WelcomeAnimationProps) {
           textTransform: "uppercase" as const,
           whiteSpace: "nowrap" as const,
         }}>
-          © {new Date().getFullYear()} Rivanzee · All Rights Reserved
+          © {new Date().getFullYear()} MyPlanner · All Rights Reserved
         </div>
 
         {/* ── Corner accents ── */}

@@ -1,6 +1,6 @@
 {
-  "name": "Rivanzee Planner",
-  "short_name": "Rivanzee",
+  "name": "MyPlanner",
+  "short_name": "MyPlanner",
   "description": "Aplikasi Perencanaan & Produktivitas Pribadi",
   "start_url": "/dashboard",
   "display": "standalone",

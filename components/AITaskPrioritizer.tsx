@@ -72,48 +72,39 @@ export default function AITaskPrioritizer({ priorityTasks, regularTasks }: AITas
     <div style={{
       background: "var(--theme-surface)",
       border: "1px solid var(--theme-border)",
-      borderRadius: 16,
-      padding: 20,
+      borderRadius: 12,
+      padding: 18,
       position: "relative",
-      overflow: "hidden",
     }}>
-      {/* Ambient glow */}
-      <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, borderRadius: "50%", background: "rgba(251,191,36,0.04)", pointerEvents: "none" }} />
-
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: result ? 16 : 0 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: result ? 14 : 0 }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "var(--theme-ink)", display: "flex", alignItems: "center", gap: 7 }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--theme-amber)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-            AI Prioritizer
+          <h3 style={{ margin: 0, fontSize: 13.5, fontWeight: 600, color: "var(--theme-ink)", display: "flex", alignItems: "center", gap: 7 }}>
+            Prioritas & Optimasi
           </h3>
-          <p style={{ margin: "3px 0 0", fontSize: 11, color: "var(--theme-muted)" }}>
-            {totalPending > 0 ? `${totalPending} tugas pending — Optimasi urutan?` : "Tidak ada tugas pending"}
+          <p style={{ margin: "2px 0 0", fontSize: 11, color: "var(--theme-muted)" }}>
+            {totalPending > 0 ? `${totalPending} tugas pending • urutkan beban kerja` : "Tidak ada tugas pending"}
           </p>
         </div>
         <button
           onClick={analyze}
           disabled={loading || totalPending === 0}
           style={{
-            background: loading ? "var(--theme-surface-2)" : "linear-gradient(135deg, #D97706, #F59E0B)",
-            color: loading ? "var(--theme-muted)" : "#451A03",
-            border: "none", borderRadius: 10,
-            padding: "8px 14px", fontSize: 11.5,
+            background: loading ? "var(--theme-surface-2)" : "var(--theme-surface-2)",
+            color: loading ? "var(--theme-muted)" : "var(--theme-ink)",
+            border: "1px solid var(--theme-border-2)",
+            borderRadius: 7,
+            padding: "6px 12px", fontSize: 11.5,
             cursor: loading || totalPending === 0 ? "not-allowed" : "pointer",
-            fontWeight: 700, display: "flex", alignItems: "center", gap: 5,
-            transition: "all 0.2s",
-            boxShadow: loading ? "none" : "0 2px 10px rgba(245,158,11,0.25)",
+            fontWeight: 600, display: "flex", alignItems: "center", gap: 5,
+            transition: "all 0.15s ease",
             fontFamily: "inherit",
-            opacity: totalPending === 0 ? 0.5 : 1,
+            opacity: totalPending === 0 ? 0.4 : 1,
           }}
-          onMouseEnter={e => { if (!loading && totalPending > 0) e.currentTarget.style.transform = "translateY(-1px)"; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; }}
+          onMouseEnter={e => { if (!loading && totalPending > 0) e.currentTarget.style.background = "var(--theme-surface-3)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "var(--theme-surface-2)"; }}
         >
-          {loading ? (
-            <><span className="animate-pulse-soft">⏳</span> Menganalisis...</>
-          ) : (
-            <><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Optimasi</>
-          )}
+          {loading ? "Menganalisis..." : "Optimasi"}
         </button>
       </div>
 

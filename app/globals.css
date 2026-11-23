@@ -22,45 +22,42 @@
 }
 
 /* ============================================
-   PERMANENT DARK THEME (default)
+   PERMANENT DARK THEME (default) - High-Taste Refined Dark
    ============================================ */
 :root {
-  /* Backgrounds — layered dark surfaces */
-  --theme-bg:         #0C0C0E;   /* deepest background */
-  --theme-surface:    #141417;   /* card / panel surface */
-  --theme-surface-2:  #1C1C20;   /* elevated surface (inputs, badges) */
-  --theme-surface-3:  #242429;   /* hover / selected state */
+  /* Backgrounds — obsidian & deep graphite */
+  --theme-bg:         #09090B;   /* deep slate/zinc background */
+  --theme-surface:    #111114;   /* panel surface */
+  --theme-surface-2:  #18181C;   /* elevated surface (inputs, hover) */
+  --theme-surface-3:  #222227;   /* active / selected state */
 
-  /* Text */
-  --theme-ink:    #F2F2F4;       /* primary text */
-  --theme-ink-2:  #9191A0;       /* secondary text */
+  /* Text — precise contrast hierarchy */
+  --theme-ink:    #F4F4F5;       /* primary text */
+  --theme-ink-2:  #A1A1AA;       /* secondary text */
 
-  /* Accent — emerald green (primary action) */
-  --theme-accent:   #34D399;     /* bright emerald */
-  --theme-accent-2: #10B981;     /* deeper emerald */
+  /* Accent — refined emerald */
+  --theme-accent:   #10B981;     /* balanced emerald */
+  --theme-accent-2: #059669;     /* deeper emerald */
 
-  /* Supporting colors — all calibrated to dark bg */
-  --theme-amber:  #FBBF24;       /* warm gold */
-  --theme-coral:  #FB7185;       /* rose/pink-red */
-  --theme-blue:   #60A5FA;       /* sky blue */
-  --theme-purple: #C084FC;       /* soft violet */
-  --theme-teal:   #2DD4BF;       /* teal accent */
+  /* Supporting colors — calibrated, desaturated */
+  --theme-amber:  #F59E0B;       /* amber gold */
+  --theme-coral:  #F43F5E;       /* rose red */
+  --theme-blue:   #3B82F6;       /* crisp blue */
+  --theme-purple: #A855F7;       /* violet */
+  --theme-teal:   #14B8A6;       /* teal */
 
-  /* Muted / border */
-  --theme-muted:      #5C5C6B;
-  --theme-border:     #2A2A30;
-  --theme-border-2:   #38383F;
+  /* Muted / hairline borders */
+  --theme-muted:      #71717A;
+  --theme-border:     rgba(255, 255, 255, 0.08);
+  --theme-border-2:   rgba(255, 255, 255, 0.15);
 
   /* Sidebar */
-  --theme-sidebar:        #101013;
-  --theme-sidebar-border: #1E1E23;
+  --theme-sidebar:        #0D0D10;
+  --theme-sidebar-border: rgba(255, 255, 255, 0.06);
 
-  /* Shadows */
-  --theme-card-shadow:       0 1px 4px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
-  --theme-card-shadow-hover: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
-
-  /* XP / level gradient */
-  --theme-xp-gradient: linear-gradient(90deg, #34D399, #10B981);
+  /* Shadows — crisp hairlines, minimal blur */
+  --theme-card-shadow:       0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
+  --theme-card-shadow-hover: 0 4px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
 }
 
 /* .dark class is kept empty intentionally for next-themes compatibility */

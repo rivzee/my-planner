@@ -288,43 +288,94 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* ── XP Banner ── */}
+        {/* ── Daily Focus Readiness Bar (Anti-Slop Clean Metrics) ── */}
         <div
           className="animate-fade-up delay-100"
           style={{
-            background: "linear-gradient(135deg, #065F46 0%, #064E3B 50%, #1E3A5F 100%)",
-            borderRadius: 18,
-            padding: "18px 24px",
+            background: "var(--theme-surface)",
+            borderRadius: 14,
+            padding: "16px 20px",
             marginBottom: 24,
             display: "flex",
             alignItems: "center",
-            gap: 18,
+            justifyContent: "space-between",
             flexWrap: "wrap" as const,
-            boxShadow: "0 8px 24px rgba(22,163,74,0.25)",
-            position: "relative" as const,
-            overflow: "hidden",
+            gap: 16,
+            border: "1px solid var(--theme-border)",
+            boxShadow: "var(--theme-card-shadow)",
           }}
         >
-          {/* Decorative circles */}
-          <div style={{ position: "absolute", right: -30, top: -30, width: 120, height: 120, background: "rgba(255,255,255,0.05)", borderRadius: "50%" }} />
-          <div style={{ position: "absolute", right: 60, bottom: -50, width: 100, height: 100, background: "rgba(255,255,255,0.04)", borderRadius: "50%" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{
+              width: 36, height: 36,
+              borderRadius: 10,
+              background: "rgba(16,185,129,0.1)",
+              border: "1px solid rgba(16,185,129,0.2)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "var(--theme-accent)",
+              flexShrink: 0,
+            }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div>
+              <div style={{ fontSize: 13.5, fontWeight: 600, color: "var(--theme-ink)" }}>
+                {dailyTotal === 0 ? "Belum ada rencana harian" : `${dailyDone} dari ${dailyTotal} tugas harian selesai`}
+              </div>
+              <div style={{ fontSize: 12, color: "var(--theme-muted)", marginTop: 2 }}>
+                {habitToday}/{habitTotal} habit terlaksana • Streak tertinggi: {habitStreak} hari
+              </div>
+            </div>
+          </div>
 
-          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 14, padding: "10px 12px", backdropFilter: "blur(4px)", flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" color="white"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.8)", fontWeight: 600, marginTop: 4, textAlign: "center" as const }}>LV.{currentLevel}</div>
-          </div>
-          <div style={{ flex: 1, minWidth: 160 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-              <span style={{ fontSize: 14, fontWeight: 700, color: "white" }}>Level {currentLevel} — Explorer</span>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>{xpInLevel}/{LEVEL_UP_XP} XP</span>
-            </div>
-            <div style={{ height: 7, background: "rgba(255,255,255,0.15)", borderRadius: 999, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${xpPct}%`, background: "rgba(255,255,255,0.9)", borderRadius: 999, transition: "width 0.7s cubic-bezier(0.16,1,0.3,1)" }} />
-            </div>
-          </div>
-          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.75)", textAlign: "right" as const, flexShrink: 0 }}>
-            <div style={{ fontWeight: 700, color: "white", fontSize: 16 }}>{LEVEL_UP_XP - xpInLevel} XP</div>
-            <div style={{ fontSize: 11, marginTop: 1 }}>menuju Level {currentLevel + 1}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <button
+              onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }))}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "6px 12px",
+                background: "var(--theme-surface-2)",
+                border: "1px solid var(--theme-border)",
+                borderRadius: 8,
+                fontSize: 12,
+                color: "var(--theme-ink-2)",
+                cursor: "pointer",
+                transition: "all 0.15s",
+                fontFamily: "inherit",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--theme-border-2)"; e.currentTarget.style.color = "var(--theme-ink)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--theme-border)"; e.currentTarget.style.color = "var(--theme-ink-2)"; }}
+            >
+              <span>Quick Action</span>
+              <kbd style={{
+                padding: "2px 5px",
+                fontSize: 10,
+                background: "var(--theme-surface)",
+                border: "1px solid var(--theme-border)",
+                borderRadius: 4,
+                color: "var(--theme-muted)",
+                fontWeight: 600,
+              }}>⌘K</kbd>
+            </button>
+            <Link
+              href="/harian"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "7px 14px",
+                background: "var(--theme-accent)",
+                color: "#052e16",
+                borderRadius: 8,
+                fontSize: 12,
+                fontWeight: 600,
+                textDecoration: "none",
+                transition: "opacity 0.15s",
+              }}
+            >
+              Buka Harian →
+            </Link>
           </div>
         </div>
 

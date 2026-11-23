@@ -1,15 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
-import XPToast from "@/components/XPToast";
 import CommandPalette from "@/components/CommandPalette";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "Rivanzee — Personal Planner",
+  title: "MyPlanner — Personal Planner",
   description: "Aplikasi perencanaan pribadi — rencanakan hari, minggu, bulan, dan tahun lebih efektif dengan bantuan AI.",
   manifest: "/manifest.json",
-  appleWebApp: { title: "Rivanzee", statusBarStyle: "black-translucent" },
+  appleWebApp: { title: "MyPlanner", statusBarStyle: "black-translucent" },
 };
 
 export const viewport: Viewport = {
@@ -48,7 +47,6 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark">
           <AuthProvider>
             {children}
-            <XPToast />
             <CommandPalette />
           </AuthProvider>
         </ThemeProvider>

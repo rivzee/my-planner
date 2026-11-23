@@ -15,14 +15,15 @@ import type { Task, PlannerData } from "@/types";
 const card: React.CSSProperties = {
   background: "var(--theme-surface)",
   border: "1px solid var(--theme-border)",
-  borderRadius: 16,
-  padding: 24,
+  borderRadius: 12,
+  padding: "18px 20px",
+  boxShadow: "var(--theme-card-shadow)",
 };
 
 const cardTitle: React.CSSProperties = {
-  margin: "0 0 16px",
-  fontSize: 16,
-  fontWeight: 700,
+  margin: "0 0 14px",
+  fontSize: 13.5,
+  fontWeight: 600,
   color: "var(--theme-ink)",
   display: "flex",
   alignItems: "center",
@@ -44,6 +45,21 @@ export default function HarianPage() {
     setTasks(savedTasks);
     setPriorityTasks(savedPriority);
     setNote(savedNote);
+  }, []);
+
+  // Listen to Quick Add from Command Palette
+  useEffect(() => {
+    const handleTaskAdded = (e: Event) => {
+      const customEvent = e as CustomEvent<Task>;
+      if (customEvent.detail) {
+        setTasks((prev) => {
+          if (prev.some((t) => t.id === customEvent.detail.id)) return prev;
+          return [...prev, customEvent.detail];
+        });
+      }
+    };
+    window.addEventListener("task-added", handleTaskAdded);
+    return () => window.removeEventListener("task-added", handleTaskAdded);
   }, []);
 
   useEffect(() => { if (!mounted) return; storage.set("daily-tasks", tasks); }, [tasks, mounted]);
@@ -216,14 +232,28 @@ export default function HarianPage() {
           {/* Right column */}
           <div style={{ display: "flex", flexDirection: "column", gap: 16, position: "sticky", top: 32 }}>
             {/* Stat cards */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <div style={{ background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.2)", borderRadius: 14, padding: "18px 16px", textAlign: "center" as const }}>
-                <div style={{ fontSize: 32, fontFamily: '"DM Serif Display", serif', fontWeight: 400, color: "var(--theme-ink)" }}>{completedCount}</div>
-                <div style={{ fontSize: 12, color: "var(--theme-muted)", marginTop: 4, fontWeight: 500 }}>Selesai</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div style={{
+                background: "var(--theme-surface)",
+                border: "1px solid var(--theme-border)",
+                borderRadius: 10,
+                padding: "14px 12px",
+                textAlign: "center" as const,
+                boxShadow: "var(--theme-card-shadow)",
+              }}>
+                <div style={{ fontSize: 24, fontFamily: '"DM Serif Display", serif', fontWeight: 400, color: "var(--theme-ink)" }}>{completedCount}</div>
+                <div style={{ fontSize: 11, color: "var(--theme-muted)", marginTop: 2, fontWeight: 500 }}>Selesai</div>
               </div>
-              <div style={{ background: "rgba(251,113,133,0.1)", border: "1px solid rgba(251,113,133,0.2)", borderRadius: 14, padding: "18px 16px", textAlign: "center" as const }}>
-                <div style={{ fontSize: 32, fontFamily: '"DM Serif Display", serif', fontWeight: 400, color: "var(--theme-ink)" }}>{totalCount - completedCount}</div>
-                <div style={{ fontSize: 12, color: "var(--theme-muted)", marginTop: 4, fontWeight: 500 }}>Pending</div>
+              <div style={{
+                background: "var(--theme-surface)",
+                border: "1px solid var(--theme-border)",
+                borderRadius: 10,
+                padding: "14px 12px",
+                textAlign: "center" as const,
+                boxShadow: "var(--theme-card-shadow)",
+              }}>
+                <div style={{ fontSize: 24, fontFamily: '"DM Serif Display", serif', fontWeight: 400, color: "var(--theme-ink)" }}>{totalCount - completedCount}</div>
+                <div style={{ fontSize: 11, color: "var(--theme-muted)", marginTop: 2, fontWeight: 500 }}>Pending</div>
               </div>
             </div>
 
