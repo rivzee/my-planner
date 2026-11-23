@@ -19,8 +19,7 @@ export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  // Default to "Tahunan" exactly as requested in user showcase screenshot
-  const [activePreview, setActivePreview] = useState<"Harian" | "Mingguan" | "Bulanan" | "Tahunan" | "Habit">("Tahunan");
+  const [activePreview, setActivePreview] = useState<"Harian" | "Mingguan" | "Bulanan" | "Tahunan" | "Habit">("Harian");
   const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
@@ -69,466 +68,522 @@ export default function Home() {
           inset: 0,
           pointerEvents: "none",
           zIndex: 0,
-          backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px)",
           backgroundSize: "28px 28px",
           maskImage: "radial-gradient(ellipse 70% 50% at 50% 15%, #000 60%, transparent 100%)",
           WebkitMaskImage: "radial-gradient(ellipse 70% 50% at 50% 15%, #000 60%, transparent 100%)",
         }}
       />
 
-      {/* ── SECTION 1: PRIMARY LIVE MOCKUP HERO (Directly matches user showcase) ── */}
+      {/* ── SECTION 1: HERO VIEWPORT (TasteSkill One-Section-Per-Screen Rule: 100svh Zero-Overflow) ── */}
       <section style={{
-        padding: "24px 24px 64px",
-        maxWidth: 1040,
+        minHeight: "100svh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "24px 24px 20px",
+        maxWidth: 1080,
         margin: "0 auto",
         position: "relative",
         zIndex: 1,
         boxSizing: "border-box",
       }}>
 
-        {/* Top In-Flow Brand & Access Bar (Clean, no fixed header clutter) */}
+        {/* Top In-Flow Brand Lockup (Replaces cluttered sticky header) */}
         <div style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           width: "100%",
-          paddingBottom: 28,
+          paddingTop: 8,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Logo size={34} interactive={true} />
-            <span style={{ fontFamily: '"DM Serif Display", serif', fontSize: 20, color: "#F4F4F5", letterSpacing: "-0.5px" }}>
+            <Logo size={36} interactive={true} />
+            <span style={{ fontFamily: '"DM Serif Display", serif', fontSize: 22, color: "#F4F4F5", letterSpacing: "-0.5px" }}>
               MyPlanner
             </span>
           </div>
 
-          <button
-            onClick={() => signIn("google")}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "8px 18px",
-              background: "#10B981",
-              color: "#052e16",
-              border: "none",
-              borderRadius: 10,
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "transform 150ms ease-out, background 150ms ease-out, box-shadow 150ms ease-out",
-              boxShadow: "0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#34D399";
-              e.currentTarget.style.transform = "translateY(-1px)";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255,255,255,0.2)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#10B981";
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)";
-            }}
-            onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.98)"; }}
-            onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
-          >
-            <GoogleIcon size={15} />
-            Buka Ruang Kerja — Akses Google
-          </button>
+          <div style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 7,
+            background: "rgba(255, 255, 255, 0.03)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            borderRadius: 20,
+            padding: "5px 12px",
+            fontSize: 11,
+            fontWeight: 500,
+            color: "#A1A1AA",
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10B981" }} />
+            <span>Tactile Time-Blocking • Gemini 2.5</span>
+          </div>
         </div>
 
-        {/* Section Heading (Matches screenshot) */}
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <div style={{
-            fontSize: 11,
-            color: "#10B981",
-            fontWeight: 700,
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            marginBottom: 10,
-          }}>
-            LINGKUNGAN KERJA NYATA
-          </div>
+        {/* Center Focal Point: Headline, Subtitle & Action */}
+        <div style={{
+          maxWidth: 780,
+          margin: "auto",
+          textAlign: "center",
+          padding: "20px 0 16px",
+        }}>
+
           <h1 style={{
             fontFamily: '"DM Serif Display", serif',
-            fontSize: "clamp(32px, 4.2vw, 48px)",
+            fontSize: "clamp(34px, 4.4vw, 54px)",
             fontWeight: 400,
+            lineHeight: 1.15,
             color: "#F4F4F5",
-            margin: "0 0 10px",
-            letterSpacing: "-0.5px",
+            margin: "0 0 14px",
+            letterSpacing: "-0.8px",
           }}>
-            Antarmuka Tanpa Hambatan
+            Rencanakan Hari dengan Presisi.<br />
+            <span style={{ color: "#10B981" }}>Eksekusi Tanpa Distraksi.</span>
           </h1>
+
           <p style={{
-            fontSize: 14,
+            fontSize: "clamp(14px, 1.6vw, 16px)",
             color: "#A1A1AA",
-            margin: "0 auto",
-            maxWidth: 520,
-            lineHeight: 1.6,
+            lineHeight: 1.65,
+            maxWidth: 580,
+            margin: "0 auto 28px",
           }}>
-            Satu lingkungan kerja terstruktur untuk tiga skala waktu: harian, mingguan, dan kuartal.
+            Satu ruang kerja terstruktur untuk tiga skala waktu: harian, mingguan, dan kuartal.
+            Bebas dari kebisingan template generik untuk menjaga konsistensi jangka panjang Anda.
           </p>
-        </div>
 
-        {/* Specular Hairline Monolith Mockup Frame */}
-        <div style={{
-          background: "#111116",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          boxShadow: "0 24px 64px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12)",
-          borderRadius: 20,
-          overflow: "hidden",
-        }}>
-
-          {/* Window Title Bar */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "12px 18px",
-            background: "#0C0C0F",
-            borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#27272A" }} />
-              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#27272A" }} />
-              <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#27272A" }} />
-              <span style={{ fontSize: 11, color: "#71717A", marginLeft: 8, fontFamily: 'monospace' }}>app.myplanner.internal</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10B981" }} />
-              <span style={{ fontSize: 11, color: "#71717A", fontWeight: 500 }}>Live Environment</span>
-            </div>
-          </div>
-
-          {/* Application Mock Body */}
-          <div style={{
-            padding: "24px",
-            display: "flex",
-            gap: 20,
-            alignItems: "stretch",
-            minHeight: 400,
-          }}>
-
-            {/* Sidebar Preview */}
-            <div style={{
-              width: 190,
-              background: "#0C0C0F",
-              borderRadius: 12,
-              padding: "14px 10px",
-              flexShrink: 0,
-              border: "1px solid rgba(255, 255, 255, 0.05)",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18, padding: "0 4px" }}>
-                  <Logo size={24} />
-                  <span style={{ fontFamily: '"DM Serif Display", serif', fontSize: 15, color: "#F4F4F5" }}>MyPlanner</span>
-                </div>
-
-                {[
-                  { id: "Harian",   SvgIcon: Icons.Sun,      label: "Harian" },
-                  { id: "Mingguan", SvgIcon: Icons.Calendar,  label: "Mingguan" },
-                  { id: "Bulanan",  SvgIcon: Icons.Calendar,  label: "Bulanan" },
-                  { id: "Tahunan",  SvgIcon: Icons.Target,    label: "Tahunan" },
-                  { id: "Habit",    SvgIcon: Icons.Repeat,    label: "Habit" },
-                ].map((item) => {
-                  const isActive = activePreview === item.id;
-                  return (
-                    <div
-                      key={item.id}
-                      onClick={() => setActivePreview(item.id as typeof activePreview)}
-                      style={{
-                        background: isActive ? "rgba(16, 185, 129, 0.12)" : "transparent",
-                        border: `1px solid ${isActive ? "rgba(16, 185, 129, 0.3)" : "transparent"}`,
-                        borderRadius: 8,
-                        padding: "7px 10px",
-                        marginBottom: 3,
-                        cursor: "pointer",
-                        transition: "all 150ms ease-out",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                      }}
-                      onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = "rgba(255, 255, 255, 0.04)"; }}
-                      onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = "transparent"; }}
-                    >
-                      <item.SvgIcon size={13} style={{ color: isActive ? "#10B981" : "#71717A" }} />
-                      <span style={{ fontSize: 12, color: isActive ? "#10B981" : "#A1A1AA", fontWeight: isActive ? 600 : 400 }}>
-                        {item.label}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                borderRadius: 8,
-                padding: "8px 10px",
-                border: "1px solid rgba(255, 255, 255, 0.06)",
-                display: "flex",
+          {/* Action Buttons */}
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
+            <button
+              onClick={() => signIn("google")}
+              style={{
+                display: "inline-flex",
                 alignItems: "center",
-                justifyContent: "space-between",
-              }}>
-                <span style={{ fontSize: 10, color: "#71717A", fontWeight: 500 }}>Command Menu</span>
-                <kbd style={{ fontSize: 9, padding: "2px 5px", borderRadius: 4, background: "rgba(255, 255, 255, 0.08)", color: "#D4D4D8", fontFamily: "monospace" }}>⌘K</kbd>
-              </div>
-            </div>
+                gap: 10,
+                padding: "13px 26px",
+                background: "#10B981",
+                color: "#052e16",
+                border: "none",
+                borderRadius: 12,
+                cursor: "pointer",
+                fontSize: 15,
+                fontWeight: 600,
+                transition: "transform 150ms ease-out, background 150ms ease-out, box-shadow 150ms ease-out",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#34D399";
+                e.currentTarget.style.transform = "translateY(-1px)";
+                e.currentTarget.style.boxShadow = "0 4px 14px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255,255,255,0.25)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#10B981";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25)";
+              }}
+              onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.98)"; }}
+              onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
+            >
+              <GoogleIcon size={17} />
+              Buka Ruang Kerja — Akses Google
+            </button>
 
-            {/* Main Content Preview Area */}
-            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16 }}>
-                <div>
-                  <div style={{ fontSize: 11, color: "#71717A", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>TAMPILAN AKTIF</div>
-                  <div style={{ fontFamily: '"DM Serif Display", serif', fontSize: 22, color: "#F4F4F5", marginTop: 2 }}>
-                    {activePreview === "Harian"   && "Ruang Kerja Harian"}
-                    {activePreview === "Mingguan" && "Peta Sprint Mingguan"}
-                    {activePreview === "Bulanan"  && "Kalender & Evaluasi Bulanan"}
-                    {activePreview === "Tahunan"  && "Sasaran Strategis Tahunan"}
-                    {activePreview === "Habit"    && "Pelacak Konsistensi Habit"}
-                  </div>
-                </div>
-                <span style={{
-                  fontSize: 12,
-                  color: "#10B981",
-                  fontWeight: 500,
-                  background: "rgba(16, 185, 129, 0.1)",
-                  padding: "3px 8px",
-                  borderRadius: 6,
-                  border: "1px solid rgba(16, 185, 129, 0.2)",
-                }}>
-                  {activePreview}
-                </span>
-              </div>
-
-              {/* Dynamic Content Panel */}
-              <div style={{ flex: 1 }}>
-                
-                {/* TAHUNAN VIEW (Exact match to user showcase) */}
-                {activePreview === "Tahunan" && (
-                  <div style={{ display: "flex", gap: 14 }}>
-                    <div style={{ flex: 1, background: "#0C0C0F", borderRadius: 10, padding: "18px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
-                      <div style={{ fontSize: 11, color: "#A855F7", marginBottom: 6, fontWeight: 600 }}>Pilar Profesional</div>
-                      <div style={{ fontSize: 13, color: "#F4F4F5", fontWeight: 600, marginBottom: 10 }}>Sertifikasi Cloud Architecture</div>
-                      <div style={{ fontSize: 11, color: "#71717A", marginBottom: 6, display: "flex", justifyContent: "space-between" }}>
-                        <span>Progres Target</span>
-                        <span style={{ fontFamily: "monospace", color: "#A855F7", fontWeight: 600 }}>80%</span>
-                      </div>
-                      <div style={{ width: "100%", height: 4, background: "rgba(255, 255, 255, 0.08)", borderRadius: 2 }}>
-                        <div style={{ width: "80%", height: "100%", background: "#A855F7", borderRadius: 2 }} />
-                      </div>
-                    </div>
-                    <div style={{ flex: 1, background: "#0C0C0F", borderRadius: 10, padding: "18px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
-                      <div style={{ fontSize: 11, color: "#10B981", marginBottom: 6, fontWeight: 600 }}>Pilar Fisik</div>
-                      <div style={{ fontSize: 13, color: "#F4F4F5", fontWeight: 600, marginBottom: 10 }}>Konsistensi Lari 150km / Kuartal</div>
-                      <div style={{ fontSize: 11, color: "#71717A", marginBottom: 6, display: "flex", justifyContent: "space-between" }}>
-                        <span>Tercapai 90km</span>
-                        <span style={{ fontFamily: "monospace", color: "#10B981", fontWeight: 600 }}>60%</span>
-                      </div>
-                      <div style={{ width: "100%", height: 4, background: "rgba(255, 255, 255, 0.08)", borderRadius: 2 }}>
-                        <div style={{ width: "60%", height: "100%", background: "#10B981", borderRadius: 2 }} />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* HARIAN VIEW */}
-                {activePreview === "Harian" && (
-                  <div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 14 }}>
-                      {[
-                        { label: "Tugas Tersisa", val: "3", unit: "item", color: "#F59E0B" },
-                        { label: "Habit Selesai", val: "4 / 5", unit: "target", color: "#10B981" },
-                        { label: "Efisiensi Fokus", val: "92%", unit: "skor", color: "#60A5FA" },
-                      ].map(stat => (
-                        <div key={stat.label} style={{ background: "#0C0C0F", borderRadius: 10, padding: "12px 14px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
-                          <div style={{ fontFamily: "monospace", fontSize: 20, fontWeight: 700, color: stat.color }}>{stat.val}<span style={{ fontSize: 10, color: "#71717A", fontWeight: 400 }}> {stat.unit}</span></div>
-                          <div style={{ fontSize: 11, color: "#71717A", marginTop: 2 }}>{stat.label}</div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div style={{ background: "#0C0C0F", borderRadius: 10, padding: "14px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: "#F4F4F5", marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <span>Prioritas Hari Ini</span>
-                        <span style={{ fontSize: 11, color: "#71717A" }}>4 Tugas Terjadwal</span>
-                      </div>
-                      {[
-                        { text: "Rilis arsitektur v2.5 ke production", priority: "P1", done: true },
-                        { text: "Evaluasi task AI recommendations dari Gemini", priority: "P1", done: true },
-                        { text: "Tinjau backlog sprint mingguan", priority: "P2", done: false },
-                        { text: "Sesi deep work 45 menit fokus penulisan", priority: "P3", done: false },
-                      ].map((t, i) => (
-                        <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0", borderBottom: i < 3 ? "1px solid rgba(255, 255, 255, 0.04)" : "none" }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                            <div style={{
-                              width: 16, height: 16, borderRadius: 4,
-                              border: `1.5px solid ${t.done ? "#10B981" : "rgba(255, 255, 255, 0.2)"}`,
-                              background: t.done ? "#10B981" : "transparent",
-                              display: "flex", alignItems: "center", justifyContent: "center",
-                              fontSize: 9, color: "#052e16", fontWeight: 700, flexShrink: 0,
-                            }}>
-                              {t.done && "✓"}
-                            </div>
-                            <span style={{ fontSize: 12, color: t.done ? "#71717A" : "#F4F4F5", textDecoration: t.done ? "line-through" : "none" }}>
-                              {t.text}
-                            </span>
-                          </div>
-                          <span style={{
-                            fontSize: 10, fontFamily: "monospace", padding: "2px 6px", borderRadius: 4,
-                            background: t.priority === "P1" ? "rgba(244, 63, 94, 0.15)" : "rgba(255, 255, 255, 0.06)",
-                            color: t.priority === "P1" ? "#FB7185" : "#A1A1AA",
-                          }}>
-                            {t.priority}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* MINGGUAN VIEW */}
-                {activePreview === "Mingguan" && (
-                  <div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
-                      <div style={{ background: "#0C0C0F", borderRadius: 10, padding: "14px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
-                        <div style={{ fontSize: 11, color: "#10B981", fontWeight: 600, marginBottom: 6 }}>Hari Ini — Selasa</div>
-                        <div style={{ fontSize: 12, color: "#F4F4F5", marginBottom: 6 }}>• Deployment Engine v2.5</div>
-                        <div style={{ fontSize: 12, color: "#F4F4F5" }}>• Audit Quality Gate Anti-Slop</div>
-                      </div>
-                      <div style={{ background: "#0C0C0F", borderRadius: 10, padding: "14px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
-                        <div style={{ fontSize: 11, color: "#71717A", fontWeight: 600, marginBottom: 6 }}>Besok — Rabu</div>
-                        <div style={{ fontSize: 12, color: "#A1A1AA", marginBottom: 6 }}>• Evaluasi Metrik Kuartal 2</div>
-                        <div style={{ fontSize: 12, color: "#A1A1AA" }}>• Sprint Retro Bersama Tim</div>
-                      </div>
-                    </div>
-                    <div style={{ background: "rgba(255, 255, 255, 0.02)", borderRadius: 10, padding: "14px", border: "1px solid rgba(255, 255, 255, 0.06)" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 600, color: "#10B981", marginBottom: 6 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10B981" }} />
-                        Sintesis Ritme Mingguan
-                      </div>
-                      <div style={{ fontSize: 12, color: "#A1A1AA", lineHeight: 1.6 }}>
-                        Rabu terisi pertemuan koordinasi. Alokasikan waktu fokus mendalam hari ini untuk menyelesaikan pekerjaan berbobot sebelum jadwal tim dimulai.
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* BULANAN VIEW */}
-                {activePreview === "Bulanan" && (
-                  <div style={{ background: "#0C0C0F", borderRadius: 10, padding: "16px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: "#F4F4F5" }}>April 2026</span>
-                      <span style={{ fontSize: 11, color: "#10B981", background: "rgba(16, 185, 129, 0.12)", fontWeight: 600, padding: "3px 8px", borderRadius: 6 }}>
-                        4 Target Tercapai
-                      </span>
-                    </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, textAlign: "center", fontSize: 10, color: "#71717A", marginBottom: 8, fontWeight: 600 }}>
-                      {['S','S','R','K','J','S','M'].map((d, i) => <div key={i}>{d}</div>)}
-                    </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, textAlign: "center", fontSize: 12 }}>
-                      {Array.from({ length: 14 }).map((_, i) => {
-                        const isToday = i === 12;
-                        const hasEvent = i === 9 || i === 4;
-                        return (
-                          <div key={i} style={{ 
-                            padding: "8px 0", position: "relative",
-                            background: isToday ? "rgba(16, 185, 129, 0.15)" : (hasEvent ? "#18181D" : "transparent"),
-                            border: isToday ? "1px solid rgba(16, 185, 129, 0.35)" : "1px solid transparent",
-                            color: isToday ? "#10B981" : (i > 4 ? "#F4F4F5" : "#3F3F46"),
-                            borderRadius: 6, fontWeight: isToday ? 700 : 400,
-                            fontFamily: "monospace",
-                          }}>
-                            {i > 4 ? i - 4 : 26 + i}
-                            {hasEvent && <div style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", width: 4, height: 4, borderRadius: 2, background: "#60A5FA" }} />}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* HABIT VIEW */}
-                {activePreview === "Habit" && (
-                  <div style={{ background: "#0C0C0F", borderRadius: 10, padding: "16px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
-                    {[
-                      { title: "Membaca Riset Teknis 20 Menit", streak: 14, arr: [1,1,1,1,1,1,1] },
-                      { title: "Sesi Deep Work Pagi (90m)", streak: 6, arr: [1,1,1,1,1,1,0] },
-                      { title: "Latihan Peregangan & Olahraga", streak: 4, arr: [0,1,1,1,1,0,0] },
-                    ].map((h, i) => (
-                      <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 10, marginBottom: 10, borderBottom: i < 2 ? "1px solid rgba(255, 255, 255, 0.04)" : "none" }}>
-                        <div>
-                          <div style={{ fontSize: 13, color: "#F4F4F5", fontWeight: 500 }}>{h.title}</div>
-                          <div style={{ fontSize: 11, color: "#71717A", marginTop: 2, fontFamily: "monospace" }}>
-                            {h.streak} hari berturut-turut
-                          </div>
-                        </div>
-                        <div style={{ display: "flex", gap: 4 }}>
-                          {h.arr.map((done, k) => (
-                            <div key={k} style={{
-                              width: 14, height: 14, borderRadius: 3,
-                              background: done ? "#10B981" : "rgba(255, 255, 255, 0.06)",
-                              border: done ? "1px solid #10B981" : "1px solid rgba(255, 255, 255, 0.05)",
-                            }} />
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-              </div>
-            </div>
-
+            <a
+              href="#preview"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "13px 22px",
+                background: "rgba(255, 255, 255, 0.03)",
+                color: "#D4D4D8",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: 12,
+                cursor: "pointer",
+                fontSize: 14,
+                fontWeight: 500,
+                textDecoration: "none",
+                transition: "background 150ms ease-out, border-color 150ms ease-out, transform 150ms ease-out",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.06)";
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.16)";
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.03)";
+                e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+              onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.98)"; }}
+              onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
+            >
+              Lihat Pratinjau ↓
+            </a>
           </div>
         </div>
 
-        {/* System Specs (Pita spesifikasi hardware di bawah preview) */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: 12,
-          padding: "16px 20px",
-          background: "#111116",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
-          borderRadius: 14,
-          marginTop: 20,
-        }}>
-          {[
-            { metric: "< 50ms", label: "Latensi Lokal", sub: "IndexedDB instant cache" },
-            { metric: "3 Skala", label: "Dimensi Waktu", sub: "Hari • Minggu • Kuartal" },
-            { metric: "Gemini 2.5", label: "Sintesis AI", sub: "Penilaian beban kognitif" },
-            { metric: "Offline", label: "Arsitektur PWA", sub: "Sinkronisasi otomatis" },
-          ].map(s => (
-            <div key={s.label} style={{ textAlign: "left", padding: "2px 6px" }}>
-              <div style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', fontSize: 16, fontWeight: 700, color: "#10B981" }}>
-                {s.metric}
+        {/* Bottom Dock: System Specifications (Docked at foot of Screen 1 — NEVER CUT OFF) */}
+        <div style={{ width: "100%", maxWidth: 900, margin: "0 auto 6px" }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: 12,
+            padding: "12px 18px",
+            background: "#111116",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+            borderRadius: 14,
+          }}>
+            {[
+              { metric: "< 50ms", label: "Latensi Lokal", sub: "IndexedDB instant cache" },
+              { metric: "3 Skala", label: "Dimensi Waktu", sub: "Hari • Minggu • Kuartal" },
+              { metric: "Gemini 2.5", label: "Sintesis AI", sub: "Penilaian beban kognitif" },
+              { metric: "Offline", label: "Arsitektur PWA", sub: "Sinkronisasi otomatis" },
+            ].map(s => (
+              <div key={s.label} style={{ textAlign: "left", padding: "2px 6px" }}>
+                <div style={{ fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', fontSize: 16, fontWeight: 700, color: "#10B981" }}>
+                  {s.metric}
+                </div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "#F4F4F5", marginTop: 2 }}>{s.label}</div>
+                <div style={{ fontSize: 10, color: "#71717A", marginTop: 1 }}>{s.sub}</div>
               </div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "#F4F4F5", marginTop: 2 }}>{s.label}</div>
-              <div style={{ fontSize: 10, color: "#71717A", marginTop: 1 }}>{s.sub}</div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
       </section>
 
-      {/* ── SECTION 2: ARSITEKTUR BENTO GRID ── */}
-      <section id="arsitektur" style={{ padding: "48px 24px 96px", maxWidth: 1040, margin: "0 auto", position: "relative", zIndex: 1 }}>
-        <div style={{ textAlign: "center", marginBottom: 50 }}>
+      {/* ── SECTION 2: LIVE ENVIRONMENT PREVIEW (Reveals cleanly on Scroll) ── */}
+      <section id="preview" style={{ padding: "64px 24px 96px", position: "relative", zIndex: 1, scrollMarginTop: 24 }}>
+        <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+          
+          <div style={{ textAlign: "center", marginBottom: 36 }}>
+            <div style={{ fontSize: 11, color: "#10B981", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 8 }}>
+              LINGKUNGAN KERJA NYATA
+            </div>
+            <h2 style={{ fontFamily: '"DM Serif Display", serif', fontSize: "clamp(26px, 3.5vw, 38px)", fontWeight: 400, color: "#F4F4F5", margin: 0, letterSpacing: "-0.5px" }}>
+              Antarmuka Tanpa Hambatan
+            </h2>
+          </div>
+
+          {/* Specular Hairline Monolith Frame */}
+          <div style={{
+            background: "#111116",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            boxShadow: "0 24px 64px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12)",
+            borderRadius: 20,
+            overflow: "hidden",
+          }}>
+
+            {/* Window Title Bar */}
+            <div style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "12px 18px",
+              background: "#0C0C0F",
+              borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#27272A" }} />
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#27272A" }} />
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#27272A" }} />
+                <a
+                  href="https://my-planner-topaz.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: 11,
+                    color: "#71717A",
+                    marginLeft: 8,
+                    fontFamily: "monospace",
+                    textDecoration: "none",
+                    transition: "color 150ms ease-out",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#10B981")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "#71717A")}
+                >
+                  https://my-planner-topaz.vercel.app/
+                </a>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10B981" }} />
+                <span style={{ fontSize: 11, color: "#71717A", fontWeight: 500 }}>Live Environment</span>
+              </div>
+            </div>
+
+            {/* Application Mock Body */}
+            <div style={{
+              padding: "24px",
+              display: "flex", gap: 20, alignItems: "stretch",
+              minHeight: 420,
+            }}>
+
+              {/* Sidebar Preview */}
+              <div style={{
+                width: 190, background: "#0C0C0F", borderRadius: 12, padding: "14px 10px",
+                flexShrink: 0, border: "1px solid rgba(255, 255, 255, 0.05)",
+                display: "flex", flexDirection: "column", justifyContent: "space-between",
+              }}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18, padding: "0 4px" }}>
+                    <Logo size={24} />
+                    <span style={{ fontFamily: '"DM Serif Display", serif', fontSize: 15, color: "#F4F4F5" }}>MyPlanner</span>
+                  </div>
+
+                  {[
+                    { id: "Harian",   SvgIcon: Icons.Sun,      label: "Harian" },
+                    { id: "Mingguan", SvgIcon: Icons.Calendar,  label: "Mingguan" },
+                    { id: "Bulanan",  SvgIcon: Icons.Calendar,  label: "Bulanan" },
+                    { id: "Tahunan",  SvgIcon: Icons.Target,    label: "Tahunan" },
+                    { id: "Habit",    SvgIcon: Icons.Repeat,    label: "Habit" },
+                  ].map((item) => {
+                    const isActive = activePreview === item.id;
+                    return (
+                      <div
+                        key={item.id}
+                        onClick={() => setActivePreview(item.id as typeof activePreview)}
+                        style={{
+                          background: isActive ? "rgba(16, 185, 129, 0.12)" : "transparent",
+                          border: `1px solid ${isActive ? "rgba(16, 185, 129, 0.3)" : "transparent"}`,
+                          borderRadius: 8, padding: "7px 10px", marginBottom: 3,
+                          cursor: "pointer", transition: "all 150ms ease-out",
+                          display: "flex", alignItems: "center", gap: 8,
+                        }}
+                        onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.background = "rgba(255, 255, 255, 0.04)"; }}
+                        onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.background = "transparent"; }}
+                      >
+                        <item.SvgIcon size={13} style={{ color: isActive ? "#10B981" : "#71717A" }} />
+                        <span style={{ fontSize: 12, color: isActive ? "#10B981" : "#A1A1AA", fontWeight: isActive ? 600 : 400 }}>
+                          {item.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{
+                  background: "rgba(255, 255, 255, 0.03)", borderRadius: 8, padding: "8px 10px",
+                  border: "1px solid rgba(255, 255, 255, 0.06)", display: "flex", alignItems: "center", justifyContent: "space-between",
+                }}>
+                  <span style={{ fontSize: 10, color: "#71717A", fontWeight: 500 }}>Command Menu</span>
+                  <kbd style={{ fontSize: 9, padding: "2px 5px", borderRadius: 4, background: "rgba(255, 255, 255, 0.08)", color: "#D4D4D8", fontFamily: "monospace" }}>⌘K</kbd>
+                </div>
+              </div>
+
+              {/* Main Content Preview Area */}
+              <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16 }}>
+                  <div>
+                    <div style={{ fontSize: 11, color: "#71717A", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>Tampilan Aktif</div>
+                    <div style={{ fontFamily: '"DM Serif Display", serif', fontSize: 22, color: "#F4F4F5", marginTop: 2 }}>
+                      {activePreview === "Harian"   && "Ruang Kerja Harian"}
+                      {activePreview === "Mingguan" && "Peta Sprint Mingguan"}
+                      {activePreview === "Bulanan"  && "Kalender & Evaluasi Bulanan"}
+                      {activePreview === "Tahunan"  && "Sasaran Strategis Tahunan"}
+                      {activePreview === "Habit"    && "Pelacak Konsistensi Habit"}
+                    </div>
+                  </div>
+                  <span style={{ fontSize: 12, color: "#10B981", fontWeight: 500, background: "rgba(16, 185, 129, 0.1)", padding: "3px 8px", borderRadius: 6, border: "1px solid rgba(16, 185, 129, 0.2)" }}>
+                    {activePreview}
+                  </span>
+                </div>
+
+                {/* Dynamic Content Panel */}
+                <div style={{ flex: 1 }}>
+                  {activePreview === "Harian" && (
+                    <div>
+                      {/* Metric Row with Tabular Numbers */}
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 14 }}>
+                        {[
+                          { label: "Tugas Tersisa", val: "3", unit: "item", color: "#F59E0B" },
+                          { label: "Habit Selesai", val: "4 / 5", unit: "target", color: "#10B981" },
+                          { label: "Efisiensi Fokus", val: "92%", unit: "skor", color: "#60A5FA" },
+                        ].map(stat => (
+                          <div key={stat.label} style={{ background: "#0C0C0F", borderRadius: 10, padding: "12px 14px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+                            <div style={{ fontFamily: "monospace", fontSize: 20, fontWeight: 700, color: stat.color }}>{stat.val}<span style={{ fontSize: 10, color: "#71717A", fontWeight: 400 }}> {stat.unit}</span></div>
+                            <div style={{ fontSize: 11, color: "#71717A", marginTop: 2 }}>{stat.label}</div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Interactive Task Deck */}
+                      <div style={{ background: "#0C0C0F", borderRadius: 10, padding: "14px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "#F4F4F5", marginBottom: 10, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                          <span>Prioritas Hari Ini</span>
+                          <span style={{ fontSize: 11, color: "#71717A" }}>4 Tugas Terjadwal</span>
+                        </div>
+                        {[
+                          { text: "Rilis arsitektur v2.5 ke production", priority: "P1", done: true },
+                          { text: "Evaluasi task AI recommendations dari Gemini", priority: "P1", done: true },
+                          { text: "Tinjau backlog sprint mingguan", priority: "P2", done: false },
+                          { text: "Sesi deep work 45 menit fokus penulisan", priority: "P3", done: false },
+                        ].map((t, i) => (
+                          <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0", borderBottom: i < 3 ? "1px solid rgba(255, 255, 255, 0.04)" : "none" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                              <div style={{
+                                width: 16, height: 16, borderRadius: 4,
+                                border: `1.5px solid ${t.done ? "#10B981" : "rgba(255, 255, 255, 0.2)"}`,
+                                background: t.done ? "#10B981" : "transparent",
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                fontSize: 9, color: "#052e16", fontWeight: 700, flexShrink: 0,
+                              }}>
+                                {t.done && "✓"}
+                              </div>
+                              <span style={{ fontSize: 12, color: t.done ? "#71717A" : "#F4F4F5", textDecoration: t.done ? "line-through" : "none" }}>
+                                {t.text}
+                              </span>
+                            </div>
+                            <span style={{
+                              fontSize: 10, fontFamily: "monospace", padding: "2px 6px", borderRadius: 4,
+                              background: t.priority === "P1" ? "rgba(244, 63, 94, 0.15)" : "rgba(255, 255, 255, 0.06)",
+                              color: t.priority === "P1" ? "#FB7185" : "#A1A1AA",
+                            }}>
+                              {t.priority}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {activePreview === "Mingguan" && (
+                    <div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+                        <div style={{ background: "#0C0C0F", borderRadius: 10, padding: "14px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+                          <div style={{ fontSize: 11, color: "#10B981", fontWeight: 600, marginBottom: 6 }}>Hari Ini — Selasa</div>
+                          <div style={{ fontSize: 12, color: "#F4F4F5", marginBottom: 6 }}>• Deployment Engine v2.5</div>
+                          <div style={{ fontSize: 12, color: "#F4F4F5" }}>• Audit Quality Gate Anti-Slop</div>
+                        </div>
+                        <div style={{ background: "#0C0C0F", borderRadius: 10, padding: "14px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+                          <div style={{ fontSize: 11, color: "#71717A", fontWeight: 600, marginBottom: 6 }}>Besok — Rabu</div>
+                          <div style={{ fontSize: 12, color: "#A1A1AA", marginBottom: 6 }}>• Evaluasi Metrik Kuartal 2</div>
+                          <div style={{ fontSize: 12, color: "#A1A1AA" }}>• Sprint Retro Bersama Tim</div>
+                        </div>
+                      </div>
+                      <div style={{ background: "rgba(255, 255, 255, 0.02)", borderRadius: 10, padding: "14px", border: "1px solid rgba(255, 255, 255, 0.06)" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, fontWeight: 600, color: "#10B981", marginBottom: 6 }}>
+                          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10B981" }} />
+                          Sintesis Ritme Mingguan
+                        </div>
+                        <div style={{ fontSize: 12, color: "#A1A1AA", lineHeight: 1.6 }}>
+                          Rabu terisi pertemuan koordinasi. Alokasikan waktu fokus mendalam hari ini untuk menyelesaikan pekerjaan berbobot sebelum jadwal tim dimulai.
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activePreview === "Bulanan" && (
+                    <div style={{ background: "#0C0C0F", borderRadius: 10, padding: "16px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#F4F4F5" }}>April 2026</span>
+                        <span style={{ fontSize: 11, color: "#10B981", background: "rgba(16, 185, 129, 0.12)", fontWeight: 600, padding: "3px 8px", borderRadius: 6 }}>
+                          4 Target Tercapai
+                        </span>
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, textAlign: "center", fontSize: 10, color: "#71717A", marginBottom: 8, fontWeight: 600 }}>
+                        {['S','S','R','K','J','S','M'].map((d, i) => <div key={i}>{d}</div>)}
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, textAlign: "center", fontSize: 12 }}>
+                        {Array.from({ length: 14 }).map((_, i) => {
+                          const isToday = i === 12;
+                          const hasEvent = i === 9 || i === 4;
+                          return (
+                            <div key={i} style={{ 
+                              padding: "8px 0", position: "relative",
+                              background: isToday ? "rgba(16, 185, 129, 0.15)" : (hasEvent ? "#18181D" : "transparent"),
+                              border: isToday ? "1px solid rgba(16, 185, 129, 0.35)" : "1px solid transparent",
+                              color: isToday ? "#10B981" : (i > 4 ? "#F4F4F5" : "#3F3F46"),
+                              borderRadius: 6, fontWeight: isToday ? 700 : 400,
+                              fontFamily: "monospace",
+                            }}>
+                              {i > 4 ? i - 4 : 26 + i}
+                              {hasEvent && <div style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", width: 4, height: 4, borderRadius: 2, background: "#60A5FA" }} />}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {activePreview === "Tahunan" && (
+                    <div style={{ display: "flex", gap: 12 }}>
+                      <div style={{ flex: 1, background: "#0C0C0F", borderRadius: 10, padding: "16px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+                        <div style={{ fontSize: 11, color: "#A855F7", marginBottom: 4, fontWeight: 600 }}>Pilar Profesional</div>
+                        <div style={{ fontSize: 13, color: "#F4F4F5", fontWeight: 600, marginBottom: 8 }}>Sertifikasi Cloud Architecture</div>
+                        <div style={{ fontSize: 11, color: "#71717A", marginBottom: 6, display: "flex", justifyContent: "space-between" }}>
+                          <span>Progres Target</span>
+                          <span style={{ fontFamily: "monospace", color: "#A855F7", fontWeight: 600 }}>80%</span>
+                        </div>
+                        <div style={{ width: "100%", height: 4, background: "rgba(255, 255, 255, 0.08)", borderRadius: 2 }}>
+                          <div style={{ width: "80%", height: "100%", background: "#A855F7", borderRadius: 2 }} />
+                        </div>
+                      </div>
+                      <div style={{ flex: 1, background: "#0C0C0F", borderRadius: 10, padding: "16px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+                        <div style={{ fontSize: 11, color: "#10B981", marginBottom: 4, fontWeight: 600 }}>Pilar Fisik</div>
+                        <div style={{ fontSize: 13, color: "#F4F4F5", fontWeight: 600, marginBottom: 8 }}>Konsistensi Lari 150km / Kuartal</div>
+                        <div style={{ fontSize: 11, color: "#71717A", marginBottom: 6, display: "flex", justifyContent: "space-between" }}>
+                          <span>Tercapai 90km</span>
+                          <span style={{ fontFamily: "monospace", color: "#10B981", fontWeight: 600 }}>60%</span>
+                        </div>
+                        <div style={{ width: "100%", height: 4, background: "rgba(255, 255, 255, 0.08)", borderRadius: 2 }}>
+                          <div style={{ width: "60%", height: "100%", background: "#10B981", borderRadius: 2 }} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activePreview === "Habit" && (
+                    <div style={{ background: "#0C0C0F", borderRadius: 10, padding: "16px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
+                      {[
+                        { title: "Membaca Riset Teknis 20 Menit", streak: 14, arr: [1,1,1,1,1,1,1] },
+                        { title: "Sesi Deep Work Pagi (90m)", streak: 6, arr: [1,1,1,1,1,1,0] },
+                        { title: "Latihan Peregangan & Olahraga", streak: 4, arr: [0,1,1,1,1,0,0] },
+                      ].map((h, i) => (
+                        <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 10, marginBottom: 10, borderBottom: i < 2 ? "1px solid rgba(255, 255, 255, 0.04)" : "none" }}>
+                          <div>
+                            <div style={{ fontSize: 13, color: "#F4F4F5", fontWeight: 500 }}>{h.title}</div>
+                            <div style={{ fontSize: 11, color: "#71717A", marginTop: 2, fontFamily: "monospace" }}>
+                              {h.streak} hari berturut-turut
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", gap: 4 }}>
+                            {h.arr.map((done, k) => (
+                              <div key={k} style={{
+                                width: 14, height: 14, borderRadius: 3,
+                                background: done ? "#10B981" : "rgba(255, 255, 255, 0.06)",
+                                border: done ? "1px solid #10B981" : "1px solid rgba(255, 255, 255, 0.05)",
+                              }} />
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── SECTION 3: ARSITEKTUR BENTO GRID ── */}
+      <section id="arsitektur" style={{ padding: "48px 24px 96px", maxWidth: 1080, margin: "0 auto", position: "relative", zIndex: 1 }}>
+        <div style={{ textAlign: "center", marginBottom: 54 }}>
           <div style={{ fontSize: 11, color: "#10B981", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 10 }}>
             ARSITEKTUR KERJA
           </div>
-          <h2 style={{ fontFamily: '"DM Serif Display", serif', fontSize: "clamp(28px, 3.8vw, 42px)", fontWeight: 400, color: "#F4F4F5", margin: "0 0 12px", letterSpacing: "-0.5px" }}>
+          <h2 style={{ fontFamily: '"DM Serif Display", serif', fontSize: "clamp(30px, 4vw, 44px)", fontWeight: 400, color: "#F4F4F5", margin: "0 0 14px", letterSpacing: "-0.5px" }}>
             Dirancang untuk Kecepatan & Kontrol Nyata
           </h2>
-          <p style={{ fontSize: 14, color: "#71717A", margin: 0, maxWidth: 520, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
-            Setiap modul dioptimalkan untuk memelihara fokus eksekutif Anda tanpa distraksi.
+          <p style={{ fontSize: 15, color: "#71717A", margin: 0, maxWidth: 520, marginLeft: "auto", marginRight: "auto", lineHeight: 1.7 }}>
+            Menghilangkan distraksi pola template generik. Setiap modul dioptimalkan untuk memelihara fokus eksekutif Anda.
           </p>
         </div>
 
-        {/* Bento Grid */}
+        {/* Bento Grid: 2 rows with asymmetric column weighting */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 16 }}>
 
           {/* Bento Card 1: Daily Execution Deck (7 cols) */}
@@ -537,7 +592,7 @@ export default function Home() {
             background: "#111116",
             border: "1px solid rgba(255, 255, 255, 0.08)",
             boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
-            borderRadius: 18, padding: "26px",
+            borderRadius: 18, padding: "28px",
             display: "flex", flexDirection: "column", justifyContent: "space-between",
             transition: "transform 180ms ease-out, border-color 180ms ease-out",
           }}
@@ -545,18 +600,19 @@ export default function Home() {
           onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)"; }}
           >
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                 <span style={{ fontSize: 11, color: "#10B981", fontFamily: "monospace", fontWeight: 600 }}>01 / HARIAN</span>
                 <span style={{ fontSize: 11, color: "#71717A", background: "rgba(255, 255, 255, 0.04)", padding: "2px 8px", borderRadius: 4 }}>Tactile Feedback</span>
               </div>
-              <h3 style={{ fontFamily: '"DM Serif Display", serif', fontSize: 22, color: "#F4F4F5", margin: "0 0 8px" }}>
+              <h3 style={{ fontFamily: '"DM Serif Display", serif', fontSize: 24, color: "#F4F4F5", margin: "0 0 8px" }}>
                 Mesin Eksekusi Harian
               </h3>
-              <p style={{ fontSize: 13, color: "#A1A1AA", lineHeight: 1.6, margin: "0 0 18px" }}>
-                Sistem time-blocking berdensitas tinggi dengan penanda prioritas tegas (P1/P2) dan pintasan keyboard instan.
+              <p style={{ fontSize: 13, color: "#A1A1AA", lineHeight: 1.6, margin: "0 0 20px" }}>
+                Sistem time-blocking berdensitas tinggi dengan penanda prioritas tegas (P1/P2) dan pintasan keyboard untuk mencatat tugas dalam hitungan detik.
               </p>
             </div>
 
+            {/* Embedded Mini UI Mockup */}
             <div style={{ background: "#0C0C0F", borderRadius: 12, padding: "14px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, fontSize: 11 }}>
                 <span style={{ color: "#D4D4D8", fontWeight: 500 }}>Fokus Utama Sesi Ini</span>
@@ -579,7 +635,7 @@ export default function Home() {
             background: "#111116",
             border: "1px solid rgba(255, 255, 255, 0.08)",
             boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
-            borderRadius: 18, padding: "26px",
+            borderRadius: 18, padding: "28px",
             display: "flex", flexDirection: "column", justifyContent: "space-between",
             transition: "transform 180ms ease-out, border-color 180ms ease-out",
           }}
@@ -587,18 +643,19 @@ export default function Home() {
           onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)"; }}
           >
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                 <span style={{ fontSize: 11, color: "#10B981", fontFamily: "monospace", fontWeight: 600 }}>02 / HABIT</span>
                 <span style={{ fontSize: 11, color: "#71717A", background: "rgba(255, 255, 255, 0.04)", padding: "2px 8px", borderRadius: 4 }}>Streak 14 Hari</span>
               </div>
-              <h3 style={{ fontFamily: '"DM Serif Display", serif', fontSize: 22, color: "#F4F4F5", margin: "0 0 8px" }}>
+              <h3 style={{ fontFamily: '"DM Serif Display", serif', fontSize: 24, color: "#F4F4F5", margin: "0 0 8px" }}>
                 Matriks Konsistensi
               </h3>
-              <p style={{ fontSize: 13, color: "#A1A1AA", lineHeight: 1.6, margin: "0 0 18px" }}>
-                Pelacak ritme habit berbasis grid dot matrix untuk memvisualisasikan momentum tanpa jeda.
+              <p style={{ fontSize: 13, color: "#A1A1AA", lineHeight: 1.6, margin: "0 0 20px" }}>
+                Pelacak ritme habit berbasis grid dot matrix untuk memvisualisasikan momentum tanpa jeda secara nyata.
               </p>
             </div>
 
+            {/* Embedded Dot Matrix Preview */}
             <div style={{ background: "#0C0C0F", borderRadius: 12, padding: "16px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                 <span style={{ fontSize: 11, color: "#F4F4F5", fontWeight: 500 }}>Deep Work 90m</span>
@@ -618,7 +675,7 @@ export default function Home() {
             background: "#111116",
             border: "1px solid rgba(255, 255, 255, 0.08)",
             boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
-            borderRadius: 18, padding: "26px",
+            borderRadius: 18, padding: "28px",
             display: "flex", flexDirection: "column", justifyContent: "space-between",
             transition: "transform 180ms ease-out, border-color 180ms ease-out",
           }}
@@ -626,15 +683,15 @@ export default function Home() {
           onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)"; }}
           >
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                 <span style={{ fontSize: 11, color: "#10B981", fontFamily: "monospace", fontWeight: 600 }}>03 / SKALA</span>
                 <span style={{ fontSize: 11, color: "#71717A", background: "rgba(255, 255, 255, 0.04)", padding: "2px 8px", borderRadius: 4 }}>Makro ke Mikro</span>
               </div>
-              <h3 style={{ fontFamily: '"DM Serif Display", serif', fontSize: 22, color: "#F4F4F5", margin: "0 0 8px" }}>
+              <h3 style={{ fontFamily: '"DM Serif Display", serif', fontSize: 24, color: "#F4F4F5", margin: "0 0 8px" }}>
                 Sinkronisasi 3 Skala
               </h3>
-              <p style={{ fontSize: 13, color: "#A1A1AA", lineHeight: 1.6, margin: "0 0 18px" }}>
-                Dari target kuartal, dipecah menjadi sprint mingguan, hingga menjadi agenda harian yang jelas.
+              <p style={{ fontSize: 13, color: "#A1A1AA", lineHeight: 1.6, margin: "0 0 20px" }}>
+                Dari target kuartal, dipecah menjadi sprint mingguan, hingga menjadi agenda harian yang jelas tanpa tumpang tindih.
               </p>
             </div>
 
@@ -658,7 +715,7 @@ export default function Home() {
             background: "#111116",
             border: "1px solid rgba(255, 255, 255, 0.08)",
             boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
-            borderRadius: 18, padding: "26px",
+            borderRadius: 18, padding: "28px",
             display: "flex", flexDirection: "column", justifyContent: "space-between",
             transition: "transform 180ms ease-out, border-color 180ms ease-out",
           }}
@@ -666,18 +723,19 @@ export default function Home() {
           onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)"; }}
           >
             <div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
                 <span style={{ fontSize: 11, color: "#10B981", fontFamily: "monospace", fontWeight: 600 }}>04 / KECERDASAN</span>
                 <span style={{ fontSize: 11, color: "#10B981", background: "rgba(16, 185, 129, 0.12)", padding: "2px 8px", borderRadius: 4 }}>Gemini 2.5 Engine</span>
               </div>
-              <h3 style={{ fontFamily: '"DM Serif Display", serif', fontSize: 22, color: "#F4F4F5", margin: "0 0 8px" }}>
+              <h3 style={{ fontFamily: '"DM Serif Display", serif', fontSize: 24, color: "#F4F4F5", margin: "0 0 8px" }}>
                 Sintesis Prioritas Otomatis
               </h3>
-              <p style={{ fontSize: 13, color: "#A1A1AA", lineHeight: 1.6, margin: "0 0 18px" }}>
-                Model bahasa mengevaluasi beban kognitif daftar tugas Anda dan menyusun urutan eksekusi yang realistis.
+              <p style={{ fontSize: 13, color: "#A1A1AA", lineHeight: 1.6, margin: "0 0 20px" }}>
+                Model bahasa mengevaluasi beban kognitif daftar tugas Anda dan menyusun urutan eksekusi yang realistis sesuai kapasitas energi harian.
               </p>
             </div>
 
+            {/* AI Recommendation Snippet */}
             <div style={{ background: "#0C0C0F", borderRadius: 12, padding: "14px", border: "1px solid rgba(255, 255, 255, 0.05)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: "#10B981", fontWeight: 600, marginBottom: 6 }}>
                 <Icons.Cpu size={14} style={{ color: "#10B981" }} />
@@ -692,7 +750,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SECTION 3: CLOSING ACTION (Contained Monolith Card) ── */}
+      {/* ── SECTION 4: CLOSING ACTION (Contained Monolith Card) ── */}
       <section style={{ padding: "48px 24px 96px", position: "relative", zIndex: 1 }}>
         <div style={{
           maxWidth: 720, margin: "0 auto",
